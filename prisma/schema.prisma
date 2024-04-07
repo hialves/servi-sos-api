@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  super_admin
+  admin
+  customer
+  manager
+}
+
+model Admin {
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  name       String   @db.VarChar
+  email      String   @db.VarChar
+  assetId    Int?     @unique
+  userId     Int?     @unique
+  externalId String   @unique @default(uuid()) @db.Uuid()
+  asset      Asset?   @relation(fields: [assetId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user       User?    @relation(fields: [userId], references: [id])
+}
+
+model Asset {
+  id         Int       @id @default(autoincrement())
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  filename   String    @db.VarChar
+  source     String    @db.VarChar
+  mimeType   String    @db.VarChar
+  externalId String    @unique @default(uuid()) @db.Uuid()
+  admin      Admin?
+  customer   Customer?
+}
+
+model Customer {
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  name       String   @db.VarChar
+  email      String   @db.VarChar
+  phone      String?  @db.VarChar
+  assetId    Int?     @unique
+  userId     Int?     @unique
+  externalId String   @unique @default(uuid()) @db.Uuid()
+  user       User?    @relation(fields: [userId], references: [id])
+  asset      Asset?   @relation(fields: [assetId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model Session {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  token     String   @unique @db.VarChar
+  expiresAt DateTime @db.Timestamp(6)
+  device    String?  @db.VarChar
+  ip        String?  @db.VarChar
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model User {
+  id                         Int       @id @default(autoincrement())
+  createdAt                  DateTime  @default(now())
+  updatedAt                  DateTime  @updatedAt
+  password                   String?   @db.VarChar
+  email                      String    @unique @db.VarChar
+  recoverPasswordToken       String?   @db.VarChar
+  recoverPasswordTokenExpire DateTime? @db.Timestamp
+  googleToken                String?   @db.VarChar
+  lastLogin                  DateTime? @db.Timestamp
+  externalId                 String    @unique @default(uuid()) @db.Uuid()
+  role                       Role?
+  admin                      Admin?
+  customer                   Customer?
+  session                    Session[]
+}

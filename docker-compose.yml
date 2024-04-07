@@ -1,0 +1,40 @@
+version: '3.2'
+
+services:
+  servi-sos-api:
+    container_name: servi-sos-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/usr/app/
+      - /usr/app/node_modules
+    ports:
+      - '${PORT}:${PORT}'
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+    networks:
+      - app_network
+
+  postgres:
+    image: postgres:alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres:/data/postgres
+    environment:
+      POSTGRES_DB: template-backend
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    name: app_network
+
+volumes:
+  postgres:
+    driver: local
