@@ -14,7 +14,6 @@ declare global {
       SUPERADMIN_EMAIL: string;
       SUPERADMIN_PASSWORD: string;
       SWAGGER_PATH: string;
-      EXPOSED_ACCESS_TOKEN_HEADER: string;
     }
   }
 }

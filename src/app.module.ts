@@ -16,6 +16,7 @@ import { RepositoryModule } from './infra/modules/repository.module';
 import { AdminModule } from './infra/modules/admin.module';
 import { RateLimitModule } from './infra/security/rate-limit.module';
 import { ThrottlerGuard } from '@nestjs/throttler';
+import { CategoryModule } from './infra/modules/category.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { ThrottlerGuard } from '@nestjs/throttler';
     ProfileModule,
     RepositoryModule,
     AdminModule,
+    CategoryModule,
   ],
   controllers: [AppController],
   providers: [

@@ -6,6 +6,8 @@ import { AdminRepository } from '../../application/repositories/admin-repository
 import { AdminPrismaRepository } from '../persistence/prisma/repositories/admin.repository';
 import { CustomerRepository } from '../../application/repositories/customer-repository.interface';
 import { CustomerPrismaRepository } from '../persistence/prisma/repositories/customer.repository';
+import { CategoryRepository } from '../../application/repositories/category-repository.interface';
+import { CategoryPrismaRepository } from '../persistence/prisma/repositories/category.repository';
 
 @Module({
   imports: [PrismaModule],
@@ -22,7 +24,11 @@ import { CustomerPrismaRepository } from '../persistence/prisma/repositories/cus
       provide: CustomerRepository,
       useClass: CustomerPrismaRepository,
     },
+    {
+      provide: CategoryRepository,
+      useClass: CategoryPrismaRepository,
+    },
   ],
-  exports: [UserRepository, AdminRepository, CustomerRepository],
+  exports: [UserRepository, AdminRepository, CustomerRepository, CategoryRepository],
 })
 export class RepositoryModule {}

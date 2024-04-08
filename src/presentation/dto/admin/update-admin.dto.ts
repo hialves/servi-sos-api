@@ -1,6 +1,5 @@
 import { IsEmail, IsOptional } from 'class-validator';
-import { CreateAdminDto } from './create-admin.dto';
-import { ApiPropertyOptional, PartialType } from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class UpdateAdminDto {
   @ApiPropertyOptional()

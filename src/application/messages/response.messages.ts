@@ -73,4 +73,10 @@ export const responseMessages = {
     finalLetter: 'a',
     documentConflictError: (documentType: DocumentType = 'CNPJ') => `Já existe uma empresa com esse ${documentType}`,
   },
+
+  category: {
+    entity: 'Categoria',
+    finalLetter: 'a',
+    nameConflictError: 'Conflito de nome com o mesmo parentId',
+  },
 };

@@ -15,7 +15,7 @@ export class AppController {
     return {
       name: `App v${version}`,
       version,
-      documentation: `/${this.configService.get('SWAGGER_PATH')}`,
+      documentation: `/${this.configService.get('SWAGGER_PATH', 'docs')}`,
     };
   }
 }
