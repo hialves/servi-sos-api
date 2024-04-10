@@ -14,7 +14,7 @@ export class Category implements CategoryFields {
   createdAt: Date;
   updatedAt: Date;
   name: string;
-  parentId: number | null;
+  parentId: ID | null;
   isFinal: boolean;
 
   constructor(input: CategoryFields) {

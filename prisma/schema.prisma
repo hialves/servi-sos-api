@@ -25,6 +25,7 @@ model Admin {
   externalId String   @unique @default(uuid()) @db.Uuid()
   asset      Asset?   @relation(fields: [assetId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   user       User?    @relation(fields: [userId], references: [id])
+  orders     Order[]
 }
 
 model Asset {
@@ -51,6 +52,7 @@ model Customer {
   externalId String   @unique @default(uuid()) @db.Uuid()
   user       User?    @relation(fields: [userId], references: [id])
   asset      Asset?   @relation(fields: [assetId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  orders     Order[]
 }
 
 model Session {
@@ -79,16 +81,36 @@ model User {
   role                       Role?
   admin                      Admin?
   customer                   Customer?
-  session                    Session[]
+  sessions                   Session[]
 }
 
 model Category {
   id        Int        @id @default(autoincrement())
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
+  deletedAt DateTime?
   name      String
   parentId  Int?
   isFinal   Boolean    @default(false)
   parent    Category?  @relation("Subcategory", fields: [parentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   children  Category[] @relation("Subcategory")
+  orders    Order[]
+}
+
+model Order {
+  id                Int       @id @default(autoincrement())
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  lat               Float
+  long              Float
+  done              Boolean   @default(false)
+  price             Decimal   @db.Decimal(10, 4)
+  agreedPrice       Decimal?   @db.Decimal(10, 4)
+  externalId        String    @unique @default(uuid()) @db.Uuid()
+  categoryId        Int?
+  customerId        Int?
+  serviceProviderId Int?
+  category          Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  customer          Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  serviceProvider   Admin?    @relation(fields: [serviceProviderId], references: [id], onDelete: SetNull, onUpdate: Cascade)
 }
