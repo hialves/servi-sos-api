@@ -1,4 +1,4 @@
-import { HttpStatus } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { ExternalID } from '../../../domain/entities';
 import { Admin } from '../../../domain/entities/admin';
 import { UpdateAdminData } from '../../../domain/valueobjects/update-admin-data';
@@ -8,6 +8,7 @@ import { responseMessages } from '../../messages/response.messages';
 import { AdminRepository } from '../../repositories/admin-repository.interface';
 import { CreateAdminData } from '../../../domain/valueobjects/create-admin-data';
 
+@Injectable()
 export class AdminService {
   constructor(
     private repository: AdminRepository,

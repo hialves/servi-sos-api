@@ -1,4 +1,4 @@
-import { HttpStatus } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { ID } from '../../../domain/entities';
 import { Category } from '../../../domain/entities/category';
 import { UpdateCategoryData } from '../../../domain/valueobjects/update-category-data';
@@ -7,6 +7,7 @@ import { responseMessages } from '../../messages/response.messages';
 import { CategoryRepository } from '../../repositories/category-repository.interface';
 import { CreateCategoryData } from '../../../domain/valueobjects/create-category-data';
 
+@Injectable()
 export class CategoryService {
   constructor(private repository: CategoryRepository) {}
 

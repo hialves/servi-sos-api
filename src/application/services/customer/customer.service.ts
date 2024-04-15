@@ -1,4 +1,4 @@
-import { HttpStatus } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { ExternalID } from '../../../domain/entities';
 import { CustomerRepository } from '../../repositories/customer-repository.interface';
 import { ApplicationError } from '../../errors/application-error';
@@ -8,6 +8,7 @@ import { PasswordService } from '../../interfaces/password-service.interface';
 import { UpdateCustomerData } from '../../../domain/valueobjects/update-customer-data';
 import { CreateCustomerData } from '../../../domain/valueobjects/create-customer-data';
 
+@Injectable()
 export class CustomerService {
   constructor(
     private repository: CustomerRepository,

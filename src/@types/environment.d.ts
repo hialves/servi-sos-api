@@ -14,6 +14,12 @@ declare global {
       SUPERADMIN_EMAIL: string;
       SUPERADMIN_PASSWORD: string;
       SWAGGER_PATH: string;
+      APP_PRICE_EACH_ORDER_TO_CUSTOMER: string;
+      DATABASE_URL: string;
+      JWT_ACCESS_TOKEN_SECRET_KEY: string;
+      JWT_ACCESS_TOKEN_DURATION: string;
+      JWT_REFRESH_TOKEN_SECRET_KEY: string;
+      JWT_REFRESH_TOKEN_DURATION: string;
     }
   }
 }

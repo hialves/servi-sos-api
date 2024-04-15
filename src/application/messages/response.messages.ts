@@ -31,6 +31,8 @@ export const responseMessages = {
     entity: 'Usuário',
     passwordDontMatch: 'Senha antiga informada é incorreta.',
     disabled: 'O usuário está desativado',
+    notCustomer: 'Usuário não permitido para criação de pedido',
+    notAdmin: 'Usuário não permitido para criação de pedido',
   },
 
   form: {

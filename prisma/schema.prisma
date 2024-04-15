@@ -104,8 +104,9 @@ model Order {
   lat               Float
   long              Float
   done              Boolean   @default(false)
-  price             Decimal   @db.Decimal(10, 4)
-  agreedPrice       Decimal?   @db.Decimal(10, 4)
+  price             Int
+  agreedPrice       Int?
+  description       String?
   externalId        String    @unique @default(uuid()) @db.Uuid()
   categoryId        Int?
   customerId        Int?

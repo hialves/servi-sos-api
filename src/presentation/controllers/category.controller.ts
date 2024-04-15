@@ -23,7 +23,7 @@ import { IsPublic } from '../decorators/public.decorator';
 import { CreateCategoryData } from '../../domain/valueobjects/create-category-data';
 import { ApplicationError } from '../../application/errors/application-error';
 import { UpdateCategoryDto } from '../dto/category/update-category.dto';
-import { CategoryGetResponse, CategoryUpsertResponse } from '../response/category.response';
+import { CategoryFullResponse, CategoryNoSubResponse } from '../response/category.response';
 
 @ApiTags('Category')
 @Controller('categories')
@@ -38,7 +38,7 @@ export class CategoryController {
   }
 
   @Roles(Role.super_admin)
-  @ApiCreatedResponse({ type: CategoryUpsertResponse })
+  @ApiCreatedResponse({ type: CategoryNoSubResponse })
   @Post()
   async create(@Body() dto: CreateCategoryDto) {
     const { name, parentId, isFinal } = dto;
@@ -51,7 +51,7 @@ export class CategoryController {
   }
 
   @IsPublic()
-  @ApiOkResponse({ type: CategoryGetResponse, isArray: true })
+  @ApiOkResponse({ type: CategoryFullResponse, isArray: true })
   @Get()
   async findAll(@Query() filters?: PaginatedDto) {
     const result = await this.repository.findMany({ ...filters, include: { children: true } });
@@ -59,7 +59,7 @@ export class CategoryController {
   }
 
   @IsPublic()
-  @ApiOkResponse({ type: CategoryGetResponse })
+  @ApiOkResponse({ type: CategoryFullResponse })
   @Get(':id')
   async findOne(@Param('id') id: ID) {
     const result = await this.repository.findUnique({ where: { id }, include: { children: true } });
@@ -68,7 +68,7 @@ export class CategoryController {
   }
 
   @Roles(Role.super_admin)
-  @ApiOkResponse({ type: CategoryUpsertResponse })
+  @ApiOkResponse({ type: CategoryNoSubResponse })
   @Patch(':id')
   update(@Param('id') id: ID, @Body() dto: UpdateCategoryDto) {
     const data = new UpdateCategoryData(dto);

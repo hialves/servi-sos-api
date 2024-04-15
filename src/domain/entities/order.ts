@@ -1,4 +1,5 @@
 import { ExternalID, ID } from '.';
+import { Location } from '../valueobjects/location.value-object';
 
 export interface OrderFields {
   id: ID;
@@ -13,21 +14,22 @@ export interface OrderFields {
   price: number;
   agreedPrice: number | null;
   externalId: ExternalID;
+  description: string | null;
 }
 
-export class Order implements OrderFields {
+export class Order {
   id: ID;
   createdAt: Date;
   updatedAt: Date;
   categoryId: ID | null;
   customerId: ID | null;
   serviceProviderId: ID | null;
-  lat: number;
-  long: number;
+  location: Location;
   done: boolean;
   price: number;
   agreedPrice: number | null;
   externalId: ExternalID;
+  description: string | null;
 
   constructor(input: OrderFields) {
     this.id = input.id;
@@ -36,12 +38,12 @@ export class Order implements OrderFields {
     this.categoryId = input.categoryId;
     this.customerId = input.customerId;
     this.serviceProviderId = input.serviceProviderId;
-    this.lat = input.lat;
-    this.long = input.long;
+    this.location = new Location({ lat: input.lat, long: input.long });
     this.done = input.done;
     this.price = input.price;
     this.agreedPrice = input.agreedPrice;
     this.externalId = input.externalId;
+    this.description = input.description;
   }
 
   changeCategory(categoryId: ID) {
@@ -53,8 +55,7 @@ export class Order implements OrderFields {
   }
 
   setCustomerLocation(coords: { lat: number; long: number }) {
-    this.lat = coords.lat;
-    this.long = coords.long;
+    this.location = new Location(coords);
   }
 
   assignServiceProvider(serviceProviderId: ID) {

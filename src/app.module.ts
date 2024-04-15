@@ -17,6 +17,8 @@ import { AdminModule } from './infra/modules/admin.module';
 import { RateLimitModule } from './infra/security/rate-limit.module';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { CategoryModule } from './infra/modules/category.module';
+import { AppConfigModule } from './infra/modules/app-config.module';
+import { OrderModule } from './infra/modules/order.module';
 
 @Module({
   imports: [
@@ -24,6 +26,7 @@ import { CategoryModule } from './infra/modules/category.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    AppConfigModule,
     PrometheusModule.register(),
     AuthModule,
     CustomerModule,
@@ -34,6 +37,7 @@ import { CategoryModule } from './infra/modules/category.module';
     RepositoryModule,
     AdminModule,
     CategoryModule,
+    OrderModule,
   ],
   controllers: [AppController],
   providers: [

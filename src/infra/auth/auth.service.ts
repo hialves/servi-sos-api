@@ -9,9 +9,9 @@ import { LoginDto } from '../../presentation/dto/auth/login.dto';
 import { SessionService } from './session.service';
 import { Request, Response } from 'express';
 import { MailService } from '../../application/interfaces/mail-service.interface';
-import { PasswordService } from './password.service';
 import { ApplicationError } from '../../application/errors/application-error';
 import { UserPrismaRepository } from '../persistence/prisma/repositories/user.repository';
+import { PasswordService } from '../../application/interfaces/password-service.interface';
 
 @Injectable()
 export class AuthService {

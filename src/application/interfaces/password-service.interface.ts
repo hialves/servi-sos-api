@@ -1,4 +1,4 @@
-export interface PasswordService {
-  hashPassword(password: string): Promise<string>;
-  comparePassword(plainTextPassword: string, hashedPassword: string): Promise<boolean>;
+export abstract class PasswordService {
+  abstract hashPassword(password: string): Promise<string>;
+  abstract comparePassword(plainTextPassword: string, hashedPassword: string): Promise<boolean>;
 }

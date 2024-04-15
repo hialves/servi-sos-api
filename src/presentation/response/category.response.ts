@@ -2,7 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { ID } from '../../domain/entities';
 import { CategoryFields } from '../../domain/entities/category';
 
-class CategoryChildren {
+export class CategoryChildren {
   @ApiProperty()
   id: ID;
   @ApiProperty()
@@ -14,24 +14,12 @@ class CategoryChildren {
   @ApiProperty()
   isFinal: boolean;
   @ApiPropertyOptional()
-  parentId: ID;
+  parentId: ID | null;
 }
 
-export class CategoryGetResponse implements CategoryFields {
-  @ApiProperty()
-  id: ID;
-  @ApiProperty()
-  createdAt: Date;
-  @ApiProperty()
-  updatedAt: Date;
-  @ApiProperty()
-  name: string;
-  @ApiProperty()
-  isFinal: boolean;
-  @ApiPropertyOptional()
-  parentId: ID;
+export class CategoryFullResponse extends CategoryChildren implements CategoryFields {
   @ApiPropertyOptional()
   children: CategoryChildren[];
 }
 
-export class CategoryUpsertResponse extends CategoryChildren implements CategoryFields {}
+export class CategoryNoSubResponse extends CategoryChildren implements CategoryFields {}

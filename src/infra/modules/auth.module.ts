@@ -4,19 +4,18 @@ import { ConfigService } from '@nestjs/config';
 
 import { AuthService } from '../auth/auth.service';
 import { AuthController } from '../../presentation/controllers/auth.controller';
-import { PasswordService } from '../auth/password.service';
+import { PasswordService as PasswordServiceImpl } from '../auth/password.service';
 import { CacheModule } from '../frameworks/cache/cache.module';
 import { SessionService } from '../auth/session.service';
-import { RepositoryModule } from './repository.module';
 import { MailService } from '../../application/interfaces/mail-service.interface';
 import { UserPrismaRepository } from '../persistence/prisma/repositories/user.repository';
 import { PrismaService } from '../persistence/prisma/prisma.service';
 import { PrismaModule } from '../persistence/prisma/prisma.module';
+import { PasswordService } from '../../application/interfaces/password-service.interface';
 
 @Module({
   imports: [
     PrismaModule,
-    RepositoryModule,
     CacheModule,
     JwtModule.registerAsync({
       inject: [ConfigService],
@@ -48,7 +47,7 @@ import { PrismaModule } from '../persistence/prisma/prisma.module';
       ],
     },
     SessionService,
-    { provide: PasswordService, useValue: new PasswordService(12) },
+    { provide: PasswordService, useValue: new PasswordServiceImpl(12) },
   ],
   controllers: [AuthController],
   exports: [AuthService, PasswordService],
