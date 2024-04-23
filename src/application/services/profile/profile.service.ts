@@ -32,10 +32,6 @@ export class ProfileService {
   }
 
   private notFoundError() {
-    return new ApplicationError(
-      responseMessages.notFound(responseMessages.user.entity),
-      undefined,
-      HttpStatus.NOT_FOUND,
-    );
+    return new ApplicationError(responseMessages.notFound(responseMessages.user.entity), HttpStatus.NOT_FOUND);
   }
 }

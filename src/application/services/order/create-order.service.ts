@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { ID } from '../../../domain/entities';
 import { AppConfig } from '../../../infra/config/app.config';
 import { ApplicationError } from '../../errors/application-error';
@@ -17,11 +17,10 @@ export class CreateOrderService {
 
   async execute(input: CreateOrderDto, userId: ID) {
     const customer = await this.customerRepository.getByUserId(userId);
-    if (!customer) return new ApplicationError(responseMessages.user.notCustomer);
+    if (!customer) return new ApplicationError(responseMessages.user.notCustomer, HttpStatus.NOT_ACCEPTABLE);
 
     input.setPrice(this.appConfig.getOrderPrice()).setCustomer(customer.id);
 
-    const createdOrder = await this.orderRepository.createOrder(input);
-    return createdOrder;
+    return this.orderRepository.createOrder(input);
   }
 }

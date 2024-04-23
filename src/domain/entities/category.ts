@@ -26,7 +26,7 @@ export class Category implements CategoryFields {
     this.isFinal = input.isFinal;
   }
 
-  nameConflictedInSameParentId(parentId: ID): boolean {
+  nameConflictedInSameParentId(parentId: ID | null): boolean {
     return this.parentId === parentId;
   }
 }

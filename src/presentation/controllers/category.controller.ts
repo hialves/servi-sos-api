@@ -20,7 +20,6 @@ import { ID } from '../../domain/entities';
 import { UpdateCategoryData } from '../../domain/valueobjects/update-category-data';
 import { CategoryService } from '../../application/services/category/category.service';
 import { IsPublic } from '../decorators/public.decorator';
-import { CreateCategoryData } from '../../domain/valueobjects/create-category-data';
 import { ApplicationError } from '../../application/errors/application-error';
 import { UpdateCategoryDto } from '../dto/category/update-category.dto';
 import { CategoryFullResponse, CategoryNoSubResponse } from '../response/category.response';
@@ -41,13 +40,7 @@ export class CategoryController {
   @ApiCreatedResponse({ type: CategoryNoSubResponse })
   @Post()
   async create(@Body() dto: CreateCategoryDto) {
-    const { name, parentId, isFinal } = dto;
-    const input = new CreateCategoryData({ name, parentId, isFinal });
-    const result = await this.service.create(input);
-    if (result instanceof ApplicationError) {
-      throw new HttpException({ message: result.message, data: result.data }, result.httpStatus);
-    }
-    return this.findOne(result.id);
+    return this.service.create(dto);
   }
 
   @IsPublic()

@@ -4,7 +4,7 @@ import { ID } from '../../../../domain/entities';
 import { Category } from '../../../../domain/entities/category';
 import { Category as PrismaCategory } from '@prisma/client';
 import { CategoryRepository } from '../../../../application/repositories/category-repository.interface';
-import { CreateCategoryData } from '../../../../domain/valueobjects/create-category-data';
+import { CreateCategoryDto } from '../../../../presentation/dto/category/create-category.dto';
 
 function toDomain(result: PrismaCategory | null): Category | null {
   if (result) return new Category(result);
@@ -19,16 +19,16 @@ export class CategoryPrismaRepository implements CategoryRepository {
     return this.prisma.category;
   }
 
-  async create(input: CreateCategoryData) {
-    const result = await this.repository.create({ data: input.data, include: { parent: true, children: true } });
+  async create(input: CreateCategoryDto) {
+    const result = await this.repository.create({ data: input, include: { parent: true, children: true } });
 
     return new Category(result);
   }
 
-  async bulkCreate(parentId: number, children: CreateCategoryData[]): Promise<Category | null> {
+  async bulkCreate(parentId: number, children: CreateCategoryDto[]): Promise<Category | null> {
     const result = await this.repository.update({
       where: { id: parentId },
-      data: { children: { createMany: { data: children.map((item) => item.data) } } },
+      data: { children: { createMany: { data: children } } },
     });
 
     return toDomain(result);
@@ -41,9 +41,9 @@ export class CategoryPrismaRepository implements CategoryRepository {
     return toDomain(result);
   }
 
-  async findByName(name: string): Promise<Category | null> {
+  async findByNameAndParent(name: string, parentId: ID | null): Promise<Category | null> {
     const result = await this.repository.findFirst({
-      where: { name },
+      where: { name, parentId },
     });
     return toDomain(result);
   }

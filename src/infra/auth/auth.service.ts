@@ -49,7 +49,7 @@ export class AuthService {
     if (!user) return;
 
     if (user.recoverPasswordTokenExpire && dayjs().isAfter(dayjs(user.recoverPasswordTokenExpire))) {
-      return new ApplicationError(responseMessages.auth.invalidCodeOrExpired, undefined, HttpStatus.BAD_REQUEST);
+      return new ApplicationError(responseMessages.auth.invalidCodeOrExpired, HttpStatus.BAD_REQUEST);
     }
     const passwordHash = await this.passwordService.hashPassword(newPassword);
     user.resetPassword(passwordHash);

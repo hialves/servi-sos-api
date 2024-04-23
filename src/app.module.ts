@@ -19,6 +19,7 @@ import { ThrottlerGuard } from '@nestjs/throttler';
 import { CategoryModule } from './infra/modules/category.module';
 import { AppConfigModule } from './infra/modules/app-config.module';
 import { OrderModule } from './infra/modules/order.module';
+import { ApplicationErrorInterceptor } from './presentation/interceptors/application-error.interceptor';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { OrderModule } from './infra/modules/order.module';
     { provide: APP_GUARD, useClass: AuthGuard },
     { provide: APP_GUARD, useClass: RolesGuard },
     { provide: APP_INTERCEPTOR, useClass: LoggingInterceptor },
+    { provide: APP_INTERCEPTOR, useClass: ApplicationErrorInterceptor },
   ],
 })
 export class AppModule {}
