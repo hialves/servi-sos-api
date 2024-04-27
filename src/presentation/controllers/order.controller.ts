@@ -1,5 +1,16 @@
 import { ExternalID } from '../../domain/entities';
-import { Body, Controller, Get, NotFoundException, Param, Post, Query, Session } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  ParseFloatPipe,
+  ParseIntPipe,
+  Post,
+  Query,
+  Session,
+} from '@nestjs/common';
 import { PaginatedDto } from '../dto/list/filter-input.dto';
 import { Role } from '@prisma/client';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
@@ -10,6 +21,8 @@ import { CreateOrderDto } from '../../application/services/order/create-order.dt
 import { UserSession } from '../../infra/interfaces/user-session.interface';
 import { OrderFullResponse, OrderResponse } from '../response/order.response';
 import { AllRoles } from '../helpers/roles.helpers';
+import { OrderRepository } from '../../application/repositories/order-repository.interface';
+import { Location } from '../../domain/valueobjects/location.value-object';
 
 @ApiTags('Order')
 @Controller('orders')
@@ -17,6 +30,7 @@ export class OrderController {
   constructor(
     private createOrderService: CreateOrderService,
     private prisma: PrismaService,
+    private orderRepository: OrderRepository,
   ) {}
 
   private get repository() {
@@ -38,6 +52,19 @@ export class OrderController {
       ...filters,
       include: { category: true, customer: true, serviceProvider: true },
     });
+  }
+
+  @Roles(...AllRoles)
+  @ApiOkResponse({ type: OrderFullResponse })
+  @Get('active')
+  async activeOrders(
+    @Query('lat', ParseFloatPipe) lat: number,
+    @Query('long', ParseFloatPipe) long: number,
+    @Query('meters', ParseIntPipe) meters: number,
+    @Query('categoryId', ParseIntPipe) categoryId?: number,
+  ) {
+    const result = await this.orderRepository.activeOrders(new Location({ lat, long }), meters, { categoryId });
+    return result;
   }
 
   @Roles(...AllRoles)

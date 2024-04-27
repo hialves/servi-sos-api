@@ -7,6 +7,6 @@ export class ListActiveOrdersService {
   constructor(private orderRepository: OrderRepository) {}
 
   async execute(coords: Location) {
-    return this.orderRepository.activeOrders(coords, 30);
+    // return this.orderRepository.activeOrders(coords, 30);
   }
 }

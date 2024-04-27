@@ -11,5 +11,5 @@ export abstract class OrderRepository {
   abstract findByExternalId(externalId: ExternalID): Promise<Order | null>;
   abstract delete(externalId: ExternalID): Promise<void>;
   abstract update(input: Order): Promise<Order>;
-  abstract activeOrders(coords: Location, range: number): Promise<any>;
+  abstract activeOrders(coords: Location, range: number, filters: { categoryId?: ID }): Promise<Order[]>;
 }
