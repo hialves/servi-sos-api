@@ -10,6 +10,8 @@ import { CategoryRepository } from '../../application/repositories/category-repo
 import { CategoryPrismaRepository } from '../persistence/prisma/repositories/category.repository';
 import { OrderRepository } from '../../application/repositories/order-repository.interface';
 import { OrderPrismaRepository } from '../persistence/prisma/repositories/order.repository';
+import { OrderListRepository } from '../../application/repositories/order-list-repository.interface';
+import { OrderListPrismaRepository } from '../persistence/prisma/repositories/order-list.repository';
 
 @Global()
 @Module({
@@ -35,7 +37,18 @@ import { OrderPrismaRepository } from '../persistence/prisma/repositories/order.
       provide: OrderRepository,
       useClass: OrderPrismaRepository,
     },
+    {
+      provide: OrderListRepository,
+      useClass: OrderListPrismaRepository,
+    },
   ],
-  exports: [UserRepository, AdminRepository, CustomerRepository, CategoryRepository, OrderRepository],
+  exports: [
+    UserRepository,
+    AdminRepository,
+    CustomerRepository,
+    CategoryRepository,
+    OrderRepository,
+    OrderListRepository,
+  ],
 })
 export class RepositoryModule {}

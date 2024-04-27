@@ -21,8 +21,8 @@ import { CreateOrderDto } from '../../application/services/order/create-order.dt
 import { UserSession } from '../../infra/interfaces/user-session.interface';
 import { OrderFullResponse, OrderResponse } from '../response/order.response';
 import { AllRoles } from '../helpers/roles.helpers';
-import { OrderRepository } from '../../application/repositories/order-repository.interface';
 import { Location } from '../../domain/valueobjects/location.value-object';
+import { OrderListRepository } from '../../application/repositories/order-list-repository.interface';
 
 @ApiTags('Order')
 @Controller('orders')
@@ -30,7 +30,7 @@ export class OrderController {
   constructor(
     private createOrderService: CreateOrderService,
     private prisma: PrismaService,
-    private orderRepository: OrderRepository,
+    private orderListRepository: OrderListRepository,
   ) {}
 
   private get repository() {
@@ -63,7 +63,7 @@ export class OrderController {
     @Query('meters', ParseIntPipe) meters: number,
     @Query('categoryId', ParseIntPipe) categoryId?: number,
   ) {
-    const result = await this.orderRepository.activeOrders(new Location({ lat, long }), meters, { categoryId });
+    const result = await this.orderListRepository.activeOrders(new Location({ lat, long }), meters, { categoryId });
     return result;
   }
 
