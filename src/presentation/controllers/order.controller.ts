@@ -27,7 +27,6 @@ export class OrderController {
   @ApiOkResponse({ type: OrderResponse })
   @Post()
   async create(@Body() dto: CreateOrderDto, @Session() session: UserSession) {
-    console.log({ session });
     return this.createOrderService.execute(dto, session.userId);
   }
 

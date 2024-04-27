@@ -1,5 +1,6 @@
 import { ExternalID, ID } from '../../domain/entities';
 import { Order } from '../../domain/entities/order';
+import { Location } from '../../domain/valueobjects/location.value-object';
 import { CreateOrderDto } from '../services/order/create-order.dto';
 
 export abstract class OrderRepository {
@@ -10,4 +11,5 @@ export abstract class OrderRepository {
   abstract findByExternalId(externalId: ExternalID): Promise<Order | null>;
   abstract delete(externalId: ExternalID): Promise<void>;
   abstract update(input: Order): Promise<Order>;
+  abstract activeOrders(coords: Location, range: number): Promise<any>;
 }

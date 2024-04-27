@@ -5,6 +5,8 @@ import { Order } from '../../../../domain/entities/order';
 import { Order as PrismaOrder } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
 import { ExternalID, ID } from '../../../../domain/entities';
+import { Location } from '../../../../domain/valueobjects/location.value-object';
+import dayjs from 'dayjs';
 
 function toDomain(result: PrismaOrder): Order {
   return new Order(result);
@@ -24,11 +26,15 @@ export class OrderPrismaRepository implements OrderRepository {
   }
 
   async createOrder(input: CreateOrderDto): Promise<Order> {
-    const result = await this.repository.create({
-      data: input,
-    });
+    const result: [{ id: ID }] = await this.prisma.$queryRaw`
+      INSERT INTO "Order" ("updatedAt",lat,long,coordinates,price,description,"categoryId","customerId","externalId")
+      VALUES (${dayjs().format('YYYY-MM-DD HH:mm:ss.SSS')}::timestamp,${input.lat},
+              ${input.long},public.ST_SetSRID(public.ST_MakePoint(${input.long}::double precision,${input.lat}::double precision), 4326),
+              ${input.price},${input.description || null},${input.categoryId || null},${input.customerId},gen_random_uuid())
+      RETURNING id
+    `;
 
-    return toDomain(result);
+    return this.findById(result[0].id) as Promise<Order>;
   }
 
   async delete(externalId: string): Promise<void> {
@@ -72,5 +78,12 @@ export class OrderPrismaRepository implements OrderRepository {
       include: { category: true, customer: true, serviceProvider: true },
     });
     return toDomain(result);
+  }
+
+  async activeOrders(coords: Location, range: number): Promise<any> {
+    const result = await this.prisma.$queryRaw`
+      SELECT id FROM "Order"
+      WHERE ST_DWithin(the_geom, ST_SetSRID(ST_Point(${coords.lat}, ${coords.long}), 4326), ${range})
+    `;
   }
 }

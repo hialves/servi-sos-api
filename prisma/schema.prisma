@@ -103,6 +103,7 @@ model Order {
   updatedAt         DateTime  @updatedAt
   lat               Float
   long              Float
+  coordinates       Unsupported("geometry(Point, 4326)")
   done              Boolean   @default(false)
   price             Int
   agreedPrice       Int?

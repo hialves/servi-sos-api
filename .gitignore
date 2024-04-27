@@ -42,3 +42,6 @@ static/assets
 
 # Annotations
 TODO.md
+
+# Database
+postgres
