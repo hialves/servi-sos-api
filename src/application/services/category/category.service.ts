@@ -12,15 +12,17 @@ export class CategoryService {
   constructor(private repository: CategoryRepository) {}
 
   async create(input: CreateCategoryDto) {
-    const exists = await this.repository.findByNameAndParent(input.name, input.parentId || null);
-    if (exists && exists.nameConflictedInSameParentId(input.parentId || null)) {
-      return new ApplicationError(responseMessages.category.nameConflictError, HttpStatus.CONFLICT);
-    }
-
     if (input.parentId) {
-      const exists2 = await this.repository.findById(input.parentId);
-      if (exists2 && exists2.nameConflictedInSameParentId(input.parentId))
+      const existsParent = await this.repository.findById(input.parentId);
+      if (!existsParent)
+        return new ApplicationError(
+          responseMessages.notFound(responseMessages.category.entity, responseMessages.category.finalLetter),
+          HttpStatus.NOT_FOUND,
+        );
     }
+    const conflict = await this.checkConflictName(input.name, input.parentId);
+    if (conflict) return conflict;
+
     return this.repository.create(input);
   }
 
@@ -32,10 +34,8 @@ export class CategoryService {
         HttpStatus.NOT_FOUND,
       );
     if (updateData.data.name && existsCategory.parentId) {
-      const exists = await this.repository.findByName(updateData.data.name);
-      if (exists && exists.nameConflictedInSameParentId(existsCategory.parentId || null)) {
-        return new ApplicationError(responseMessages.category.nameConflictError, HttpStatus.CONFLICT);
-      }
+      const conflict = await this.checkConflictName(updateData.data.name, existsCategory?.parentId);
+      if (conflict) return conflict;
     }
 
     const category = new Category({
@@ -44,5 +44,13 @@ export class CategoryService {
     });
 
     return this.repository.update(category);
+  }
+
+  private async checkConflictName(name: string, parentId?: ID): Promise<ApplicationError | undefined> {
+    const _parentId = parentId || null;
+    const exists = await this.repository.findByNameAndParent(name, _parentId);
+    if (exists && exists.nameConflictedInSameParentId(_parentId)) {
+      return new ApplicationError(responseMessages.category.nameConflictError, HttpStatus.CONFLICT);
+    }
   }
 }
