@@ -26,8 +26,10 @@ async function createSuperadmin() {
   const user = await prisma.user.findUnique({
     where: { email: superadminEmail },
   });
-  info(`Superadmin already exists with email ${superadminEmail}, exiting...`);
-  if (user) return done(context);
+  if (user) {
+    info(`Superadmin already exists with email ${superadminEmail}, exiting...`);
+    return done(context);
+  }
 
   const superadminPassword = await bcrypt.hash(process.env.SUPERADMIN_PASSWORD, 12);
   await prisma.$transaction(
