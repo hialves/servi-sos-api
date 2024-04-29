@@ -15,17 +15,40 @@ enum Role {
 }
 
 model Admin {
-  id         Int      @id @default(autoincrement())
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  name       String   @db.VarChar
-  email      String   @db.VarChar
-  assetId    Int?     @unique
-  userId     Int?     @unique
-  externalId String   @unique @default(uuid()) @db.Uuid()
-  asset      Asset?   @relation(fields: [assetId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  user       User?    @relation(fields: [userId], references: [id])
+  id         Int                         @id @default(autoincrement())
+  createdAt  DateTime                    @default(now())
+  updatedAt  DateTime                    @updatedAt
+  name       String                      @db.VarChar
+  email      String                      @db.VarChar
+  assetId    Int?                        @unique
+  userId     Int?                        @unique
+  externalId String                      @unique @default(uuid()) @db.Uuid()
+  asset      Asset?                      @relation(fields: [assetId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user       User?                       @relation(fields: [userId], references: [id])
   orders     Order[]
+  config     ServiceProviderConfig?
+  categories ServiceProviderCategories[]
+}
+
+model ServiceProviderConfig {
+  id                Int                                  @id @default(autoincrement())
+  createdAt         DateTime                             @default(now())
+  updatedAt         DateTime                             @updatedAt
+  serviceProviderId Int                                  @unique
+  lat               Float
+  long              Float
+  coordinates       Unsupported("geometry(Point, 4326)")
+  serviceProvider   Admin                                @relation(fields: [serviceProviderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model ServiceProviderCategories {
+  serviceProvider   Admin    @relation(fields: [serviceProviderId], references: [id])
+  serviceProviderId Int
+  category          Category @relation(fields: [categoryId], references: [id])
+  categoryId        Int
+  createdAt         DateTime @default(now())
+
+  @@id([serviceProviderId, categoryId])
 }
 
 model Asset {
@@ -85,34 +108,35 @@ model User {
 }
 
 model Category {
-  id        Int        @id @default(autoincrement())
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  deletedAt DateTime?
-  name      String
-  parentId  Int?
-  isFinal   Boolean    @default(false)
-  parent    Category?  @relation("Subcategory", fields: [parentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  children  Category[] @relation("Subcategory")
-  orders    Order[]
+  id               Int                         @id @default(autoincrement())
+  createdAt        DateTime                    @default(now())
+  updatedAt        DateTime                    @updatedAt
+  deletedAt        DateTime?
+  name             String
+  parentId         Int?
+  isFinal          Boolean                     @default(false)
+  parent           Category?                   @relation("Subcategory", fields: [parentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  children         Category[]                  @relation("Subcategory")
+  orders           Order[]
+  serviceProviders ServiceProviderCategories[]
 }
 
 model Order {
-  id                Int       @id @default(autoincrement())
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
+  id                Int                                  @id @default(autoincrement())
+  createdAt         DateTime                             @default(now())
+  updatedAt         DateTime                             @updatedAt
   lat               Float
   long              Float
   coordinates       Unsupported("geometry(Point, 4326)")
-  done              Boolean   @default(false)
+  done              Boolean                              @default(false)
   price             Int
   agreedPrice       Int?
   description       String?
-  externalId        String    @unique @default(uuid()) @db.Uuid()
+  externalId        String                               @unique @default(uuid()) @db.Uuid()
   categoryId        Int?
   customerId        Int?
   serviceProviderId Int?
-  category          Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull, onUpdate: Cascade)
-  customer          Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull, onUpdate: Cascade)
-  serviceProvider   Admin?    @relation(fields: [serviceProviderId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  category          Category?                            @relation(fields: [categoryId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  customer          Customer?                            @relation(fields: [customerId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  serviceProvider   Admin?                               @relation(fields: [serviceProviderId], references: [id], onDelete: SetNull, onUpdate: Cascade)
 }
