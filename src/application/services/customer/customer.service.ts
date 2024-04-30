@@ -23,7 +23,7 @@ export class CustomerService {
   async update(externalId: ExternalID, updateData: UpdateCustomerData): Promise<Customer | ApplicationError> {
     const existsCustomer = await this.repository.findByExternalId(externalId);
     if (!existsCustomer)
-      return new ApplicationError(responseMessages.notFound(responseMessages.customer.entity), HttpStatus.NOT_FOUND);
+      return new ApplicationError(responseMessages.notFound(responseMessages.customer), HttpStatus.NOT_FOUND);
 
     const customerFields: CustomerFields = {
       ...existsCustomer,

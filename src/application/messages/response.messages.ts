@@ -1,7 +1,12 @@
 import { DocumentType } from '../../domain/entities';
 
 export const responseMessages = {
-  notFound: (entity: string = 'Recurso', final = 'o') => `${entity} não encontrad${final}`,
+  notFound: (obj?: { entity?: string; finalLetter?: string }) => {
+    if (!obj) return `Recurso não encontrado`;
+    if (!obj.entity) obj.entity = 'Recurso';
+    if (!obj.finalLetter) obj.finalLetter = 'o';
+    return `${obj.entity} não encontrad${obj.finalLetter}`;
+  },
   delete: {
     success: 'Deletado com sucesso',
     fail: 'Falha ao deletar',
@@ -80,5 +85,9 @@ export const responseMessages = {
     entity: 'Categoria',
     finalLetter: 'a',
     nameConflictError: 'Conflito de nome com o mesmo parentId',
+  },
+
+  serviceProviderCategory: {
+    alreadyAdded: 'Categoria já adicionada',
   },
 };

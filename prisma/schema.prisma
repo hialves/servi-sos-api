@@ -27,7 +27,7 @@ model Admin {
   user       User?                       @relation(fields: [userId], references: [id])
   orders     Order[]
   config     ServiceProviderConfig?
-  categories ServiceProviderCategories[]
+  categories ServiceProviderCategory[]
 }
 
 model ServiceProviderConfig {
@@ -41,7 +41,7 @@ model ServiceProviderConfig {
   serviceProvider   Admin                                @relation(fields: [serviceProviderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
-model ServiceProviderCategories {
+model ServiceProviderCategory {
   serviceProvider   Admin    @relation(fields: [serviceProviderId], references: [id])
   serviceProviderId Int
   category          Category @relation(fields: [categoryId], references: [id])
@@ -118,7 +118,7 @@ model Category {
   parent           Category?                   @relation("Subcategory", fields: [parentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   children         Category[]                  @relation("Subcategory")
   orders           Order[]
-  serviceProviders ServiceProviderCategories[]
+  serviceProviders ServiceProviderCategory[]
 }
 
 model Order {

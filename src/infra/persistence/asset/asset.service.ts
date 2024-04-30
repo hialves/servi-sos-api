@@ -70,7 +70,7 @@ export class AssetService implements OnApplicationBootstrap {
 
   private deleteFile(filepath: fs.PathLike): Promise<void> {
     return new Promise((resolve, reject) => {
-      if (!fs.existsSync(filepath)) return reject(responseMessages.notFound(responseMessages.file.entity));
+      if (!fs.existsSync(filepath)) return reject(responseMessages.notFound(responseMessages.file));
       if (!fs.statSync(filepath).isFile()) return reject(responseMessages.file.notFile);
 
       fs.rm(filepath, (error) => {

@@ -15,10 +15,7 @@ export class CategoryService {
     if (input.parentId) {
       const existsParent = await this.repository.findById(input.parentId);
       if (!existsParent)
-        return new ApplicationError(
-          responseMessages.notFound(responseMessages.category.entity, responseMessages.category.finalLetter),
-          HttpStatus.NOT_FOUND,
-        );
+        return new ApplicationError(responseMessages.notFound(responseMessages.category), HttpStatus.NOT_FOUND);
     }
     const conflict = await this.checkConflictName(input.name, input.parentId);
     if (conflict) return conflict;
@@ -29,10 +26,7 @@ export class CategoryService {
   async update(id: ID, updateData: UpdateCategoryData): Promise<Category | ApplicationError> {
     const existsCategory = await this.repository.findById(id);
     if (!existsCategory)
-      return new ApplicationError(
-        responseMessages.notFound(responseMessages.category.entity, responseMessages.category.finalLetter),
-        HttpStatus.NOT_FOUND,
-      );
+      return new ApplicationError(responseMessages.notFound(responseMessages.category), HttpStatus.NOT_FOUND);
     if (updateData.data.name && existsCategory.parentId) {
       const conflict = await this.checkConflictName(updateData.data.name, existsCategory?.parentId);
       if (conflict) return conflict;

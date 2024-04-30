@@ -26,7 +26,7 @@ export class AuthService {
     const resetToken = crypto.randomBytes(20).toString('hex');
     const token = crypto.createHash('sha256').update(resetToken).digest('hex');
     const user = await this.userRepository.findByEmail(email);
-    if (!user) throw new NotFoundError(responseMessages.notFound(responseMessages.user.entity), email);
+    if (!user) throw new NotFoundError(responseMessages.notFound(responseMessages.user), email);
     user.setRecoverPasswordData(token);
     await this.userRepository.update(user);
 
