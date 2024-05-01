@@ -12,6 +12,10 @@ import { OrderRepository } from '../../application/repositories/order-repository
 import { OrderPrismaRepository } from '../persistence/prisma/repositories/order.repository';
 import { OrderListRepository } from '../../application/repositories/order-list-repository.interface';
 import { OrderListPrismaRepository } from '../persistence/prisma/repositories/order-list.repository';
+import { ServiceProviderCategoryPrismaRepository } from '../persistence/prisma/repositories/service-provider-category.repository';
+import { ServiceProviderCategoryRepository } from '../../application/repositories/service-provider-category.interface';
+import { ServiceProviderConfigRepository } from '../../application/repositories/service-provider-config.interface';
+import { ServiceProviderConfigPrismaRepository } from '../persistence/prisma/repositories/service-provider-config.repository';
 
 @Global()
 @Module({
@@ -41,6 +45,14 @@ import { OrderListPrismaRepository } from '../persistence/prisma/repositories/or
       provide: OrderListRepository,
       useClass: OrderListPrismaRepository,
     },
+    {
+      provide: ServiceProviderCategoryRepository,
+      useClass: ServiceProviderCategoryPrismaRepository,
+    },
+    {
+      provide: ServiceProviderConfigRepository,
+      useClass: ServiceProviderConfigPrismaRepository,
+    },
   ],
   exports: [
     UserRepository,
@@ -49,6 +61,8 @@ import { OrderListPrismaRepository } from '../persistence/prisma/repositories/or
     CategoryRepository,
     OrderRepository,
     OrderListRepository,
+    ServiceProviderCategoryRepository,
+    ServiceProviderConfigRepository,
   ],
 })
 export class RepositoryModule {}

@@ -20,7 +20,6 @@ import { ID } from '../../domain/entities';
 import { UpdateCategoryData } from '../../domain/valueobjects/update-category-data';
 import { CategoryService } from '../../application/services/category/category.service';
 import { IsPublic } from '../decorators/public.decorator';
-import { ApplicationError } from '../../application/errors/application-error';
 import { UpdateCategoryDto } from '../dto/category/update-category.dto';
 import { CategoryFullResponse, CategoryNoSubResponse } from '../response/category.response';
 

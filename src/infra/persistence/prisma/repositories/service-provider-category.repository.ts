@@ -3,7 +3,7 @@ import { PrismaService } from '../prisma.service';
 import { ServiceProviderCategoryRepository } from '../../../../application/repositories/service-provider-category.interface';
 
 @Injectable()
-export class CategoryPrismaRepository implements ServiceProviderCategoryRepository {
+export class ServiceProviderCategoryPrismaRepository implements ServiceProviderCategoryRepository {
   constructor(private prisma: PrismaService) {}
 
   get repository() {

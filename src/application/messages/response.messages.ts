@@ -36,8 +36,8 @@ export const responseMessages = {
     entity: 'Usuário',
     passwordDontMatch: 'Senha antiga informada é incorreta.',
     disabled: 'O usuário está desativado',
-    notCustomer: 'Usuário não permitido para criação de pedido',
-    notAdmin: 'Usuário não permitido para criação de pedido',
+    notCustomer: 'Usuário não permitido para executar esta ação',
+    notAdmin: 'Usuário não permitido para executar esta ação',
   },
 
   form: {
@@ -89,5 +89,7 @@ export const responseMessages = {
 
   serviceProviderCategory: {
     alreadyAdded: 'Categoria já adicionada',
+    categoryNotFinal: 'Categoria inválida',
+    alreadyRemovedOrInvalid: 'Categoria já removida ou inválida',
   },
 };

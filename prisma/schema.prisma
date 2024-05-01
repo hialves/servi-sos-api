@@ -15,38 +15,37 @@ enum Role {
 }
 
 model Admin {
-  id         Int                         @id @default(autoincrement())
-  createdAt  DateTime                    @default(now())
-  updatedAt  DateTime                    @updatedAt
-  name       String                      @db.VarChar
-  email      String                      @db.VarChar
-  assetId    Int?                        @unique
-  userId     Int?                        @unique
-  externalId String                      @unique @default(uuid()) @db.Uuid()
-  asset      Asset?                      @relation(fields: [assetId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  user       User?                       @relation(fields: [userId], references: [id])
+  id         Int                    @id @default(autoincrement())
+  createdAt  DateTime               @default(now())
+  updatedAt  DateTime               @updatedAt
+  name       String                 @db.VarChar
+  email      String                 @db.VarChar
+  assetId    Int?                   @unique
+  userId     Int?                   @unique
+  externalId String                 @unique @default(uuid()) @db.Uuid()
+  asset      Asset?                 @relation(fields: [assetId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user       User?                  @relation(fields: [userId], references: [id])
   orders     Order[]
   config     ServiceProviderConfig?
-  categories ServiceProviderCategory[]
 }
 
 model ServiceProviderConfig {
-  id                Int                                  @id @default(autoincrement())
+  serviceProviderId Int                                  @id
   createdAt         DateTime                             @default(now())
   updatedAt         DateTime                             @updatedAt
-  serviceProviderId Int                                  @unique
   lat               Float
   long              Float
   coordinates       Unsupported("geometry(Point, 4326)")
   serviceProvider   Admin                                @relation(fields: [serviceProviderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  categories        ServiceProviderCategory[]
 }
 
 model ServiceProviderCategory {
-  serviceProvider   Admin    @relation(fields: [serviceProviderId], references: [id])
+  serviceProvider   ServiceProviderConfig @relation(fields: [serviceProviderId], references: [serviceProviderId])
   serviceProviderId Int
-  category          Category @relation(fields: [categoryId], references: [id])
+  category          Category              @relation(fields: [categoryId], references: [id])
   categoryId        Int
-  createdAt         DateTime @default(now())
+  createdAt         DateTime              @default(now())
 
   @@id([serviceProviderId, categoryId])
 }
@@ -108,15 +107,15 @@ model User {
 }
 
 model Category {
-  id               Int                         @id @default(autoincrement())
-  createdAt        DateTime                    @default(now())
-  updatedAt        DateTime                    @updatedAt
+  id               Int                       @id @default(autoincrement())
+  createdAt        DateTime                  @default(now())
+  updatedAt        DateTime                  @updatedAt
   deletedAt        DateTime?
   name             String
   parentId         Int?
-  isFinal          Boolean                     @default(false)
-  parent           Category?                   @relation("Subcategory", fields: [parentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  children         Category[]                  @relation("Subcategory")
+  isFinal          Boolean                   @default(false)
+  parent           Category?                 @relation("Subcategory", fields: [parentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  children         Category[]                @relation("Subcategory")
   orders           Order[]
   serviceProviders ServiceProviderCategory[]
 }
