@@ -7,7 +7,7 @@ import { ApplicationError } from '../../errors/application-error';
 import { responseMessages } from '../../messages/response.messages';
 
 @Injectable()
-export class SetServiceProviderConfigUsecase {
+export class SetLocationServiceProviderUsecase {
   constructor(
     private repository: ServiceProviderConfigRepository,
     private adminRepository: AdminRepository,
@@ -17,6 +17,6 @@ export class SetServiceProviderConfigUsecase {
     const serviceProvider = await this.adminRepository.getByUserId(userId);
     if (!serviceProvider) return new ApplicationError(responseMessages.user.notAdmin);
 
-    await this.repository.set(serviceProvider.id, { location });
+    await this.repository.setLocation(serviceProvider.id, location);
   }
 }

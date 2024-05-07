@@ -1,7 +1,7 @@
 import { IsLatitude, IsLongitude, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class SetConfigServiceProviderDto {
+export class SetLocationServiceProviderDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsLatitude()

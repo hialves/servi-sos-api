@@ -12,8 +12,8 @@ export class ServiceProviderConfigPrismaRepository implements ServiceProviderCon
     return this.prisma.serviceProviderConfig;
   }
 
-  async set(serviceProviderId: number, input: { location: Location }): Promise<void> {
-    const { lat, long } = input.location;
+  async setLocation(serviceProviderId: number, location: Location): Promise<void> {
+    const { lat, long } = location;
     await this.prisma.$queryRaw`
       INSERT INTO "ServiceProviderConfig" ("updatedAt",lat,long,coordinates,"serviceProviderId")
       VALUES (${dayjs().format('YYYY-MM-DD HH:mm:ss.SSS')}::timestamp,${lat},${long},
@@ -26,5 +26,9 @@ export class ServiceProviderConfigPrismaRepository implements ServiceProviderCon
         long = ${long},
         coordinates = ST_SetSRID(ST_MakePoint(${long}::double precision,${lat}::double precision), 4326)
     `;
+  }
+
+  async setFirebaseIdentifier(serviceProviderId: number, firebaseUserIdentifier: string | null): Promise<void> {
+    await this.prisma.serviceProviderConfig.update({ where: { serviceProviderId }, data: { firebaseUserIdentifier } });
   }
 }
