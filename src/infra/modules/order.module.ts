@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
-import { CreateOrderService } from '../../application/services/order/create-order.service';
+import { CreateOrderUsecase } from '../../application/usecases/order/create-order.usecase';
 import { OrderController } from '../../presentation/controllers/order.controller';
+import { NotificationModule } from '../frameworks/notification/notification.module';
 
 @Module({
-  providers: [CreateOrderService],
+  imports: [NotificationModule],
+  providers: [CreateOrderUsecase],
   controllers: [OrderController],
 })
 export class OrderModule {}

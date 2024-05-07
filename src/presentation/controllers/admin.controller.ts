@@ -8,7 +8,7 @@ import { PaginatedDto } from '../dto/list/filter-input.dto';
 import { ExternalID } from '../../domain/entities';
 import { UpdateAdminDto } from '../dto/admin/update-admin.dto';
 import { UpdateAdminData } from '../../domain/valueobjects/update-admin-data';
-import { AdminService } from '../../application/services/admin/admin.service';
+import { AdminService } from '../../application/services/admin.service';
 import { IsPublic } from '../decorators/public.decorator';
 import { CreateAdminData } from '../../domain/valueobjects/create-admin-data';
 import { AdminMapper } from '../mappers/admin.mapper';

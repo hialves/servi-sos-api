@@ -1,12 +1,12 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { ExternalID } from '../../../domain/entities';
-import { Admin } from '../../../domain/entities/admin';
-import { UpdateAdminData } from '../../../domain/valueobjects/update-admin-data';
-import { ApplicationError } from '../../errors/application-error';
-import { PasswordService } from '../../interfaces/password-service.interface';
-import { responseMessages } from '../../messages/response.messages';
-import { AdminRepository } from '../../repositories/admin-repository.interface';
-import { CreateAdminData } from '../../../domain/valueobjects/create-admin-data';
+import { ExternalID } from '../../domain/entities';
+import { Admin } from '../../domain/entities/admin';
+import { UpdateAdminData } from '../../domain/valueobjects/update-admin-data';
+import { ApplicationError } from '../errors/application-error';
+import { PasswordService } from '../interfaces/password-service.interface';
+import { responseMessages } from '../messages/response.messages';
+import { AdminRepository } from '../repositories/admin-repository.interface';
+import { CreateAdminData } from '../../domain/valueobjects/create-admin-data';
 
 @Injectable()
 export class AdminService {

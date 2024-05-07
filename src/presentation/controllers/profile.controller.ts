@@ -1,7 +1,7 @@
 import { Request } from 'express';
 import { Controller, Get, Param, Req } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { ProfileService } from '../../application/services/profile/profile.service';
+import { ProfileService } from '../../application/services/profile.service';
 import { ID } from '../../domain/entities';
 import { IsPublic } from '../decorators/public.decorator';
 

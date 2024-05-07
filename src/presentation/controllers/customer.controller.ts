@@ -1,5 +1,5 @@
 import { CreateCustomerDto } from '../dto/customer/create-customer.dto';
-import { CustomerService } from '../../application/services/customer/customer.service';
+import { CustomerService } from '../../application/services/customer.service';
 import { ExternalID } from '../../domain/entities';
 import { UpdateCustomerDto } from '../dto/customer/update-customer.dto';
 import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post, Query } from '@nestjs/common';

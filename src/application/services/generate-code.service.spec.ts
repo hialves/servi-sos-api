@@ -1,5 +1,5 @@
 import { GenerateCodeService } from './generate-code.service';
-import { CacheService } from '../../interfaces/cache-service.interface';
+import { CacheService } from '../interfaces/cache-service.interface';
 import { mock, MockProxy } from 'jest-mock-extended';
 
 describe('GenerateCodeService', () => {

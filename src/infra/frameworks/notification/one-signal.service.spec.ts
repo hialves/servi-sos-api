@@ -1,7 +1,7 @@
-import { HttpException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import axios from 'axios';
 import { OnesignalService } from './one-signal.service';
+import { ApplicationError } from '../../../application/errors/application-error';
 
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
@@ -27,13 +27,13 @@ describe('OnesignalService', () => {
       mockedAxios.post.mockResolvedValueOnce({ data: {} });
 
       await expect(
-        service.sendNotificationToUser('TestUser', { en: 'Test Content' }, { en: 'Test Heading' }),
+        service.sendNotificationToUser({ userIdentifier: 'TestUser', message: 'Test Content', title: 'Test Heading' }),
       ).resolves.not.toThrow();
 
       expect(mockedAxios.post).toHaveBeenCalledWith('/notifications', {
         app_id: process.env.ONESIGNAL_APP_KEY,
-        contents: { en: 'Test Content' },
-        headings: { en: 'Test Heading' },
+        contents: { pt: 'Test Content' },
+        headings: { pt: 'Test Heading' },
         include_external_user_ids: ['TestUser'],
       });
     });
@@ -42,8 +42,8 @@ describe('OnesignalService', () => {
       mockedAxios.post.mockRejectedValueOnce(new Error());
 
       await expect(
-        service.sendNotificationToUser('TestUser', { en: 'Test Content' }, { en: 'Test Heading' }),
-      ).rejects.toThrow(HttpException);
+        service.sendNotificationToUser({ userIdentifier: 'TestUser', message: 'Test Content', title: 'Test Heading' }),
+      ).resolves.toBeInstanceOf(ApplicationError);
     });
   });
 });

@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ServiceProviderCategoryController } from '../../presentation/controllers/service-provider-category.controller';
-import { RemoveCategoryServiceProviderService } from '../../application/services/service-provider-category/remove-category-service-provider.service';
-import { AddCategoryServiceProviderService } from '../../application/services/service-provider-category/add-category-service-provider.service';
+import { RemoveCategoryServiceProviderUsecase } from '../../application/usecases/service-provider-category/remove-category-service-provider.usecase';
+import { AddCategoryServiceProviderUsecase } from '../../application/usecases/service-provider-category/add-category-service-provider.usecase';
 
 @Module({
-  providers: [AddCategoryServiceProviderService, RemoveCategoryServiceProviderService],
+  providers: [AddCategoryServiceProviderUsecase, RemoveCategoryServiceProviderUsecase],
   controllers: [ServiceProviderCategoryController],
 })
 export class ServiceProviderCategoryModule {}

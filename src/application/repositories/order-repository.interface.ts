@@ -1,6 +1,6 @@
 import { ExternalID, ID } from '../../domain/entities';
 import { Order } from '../../domain/entities/order';
-import { CreateOrderDto } from '../services/order/create-order.dto';
+import { CreateOrderDto } from '../usecases/order/create-order.dto';
 
 export abstract class OrderRepository {
   abstract createOrder(input: CreateOrderDto): Promise<Order>;

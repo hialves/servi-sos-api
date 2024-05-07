@@ -18,7 +18,7 @@ import { Roles } from '../decorators/roles.decorator';
 import { PaginatedDto } from '../dto/list/filter-input.dto';
 import { ID } from '../../domain/entities';
 import { UpdateCategoryData } from '../../domain/valueobjects/update-category-data';
-import { CategoryService } from '../../application/services/category/category.service';
+import { CategoryService } from '../../application/services/category.service';
 import { IsPublic } from '../decorators/public.decorator';
 import { UpdateCategoryDto } from '../dto/category/update-category.dto';
 import { CategoryFullResponse, CategoryNoSubResponse } from '../response/category.response';

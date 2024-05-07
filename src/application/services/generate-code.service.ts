@@ -1,4 +1,4 @@
-import { CacheService } from '../../interfaces/cache-service.interface';
+import { CacheService } from '../interfaces/cache-service.interface';
 
 export class GenerateCodeService {
   constructor(private cache: CacheService) {}

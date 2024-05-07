@@ -7,7 +7,7 @@ import { ApplicationError } from '../../errors/application-error';
 import { AdminRepository } from '../../repositories/admin-repository.interface';
 
 @Injectable()
-export class RemoveCategoryServiceProviderService {
+export class RemoveCategoryServiceProviderUsecase {
   constructor(
     private repository: ServiceProviderCategoryRepository,
     private categoryRepository: CategoryRepository,

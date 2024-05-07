@@ -16,8 +16,8 @@ import { Role } from '@prisma/client';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Roles } from '../decorators/roles.decorator';
 import { PrismaService } from '../../infra/persistence/prisma/prisma.service';
-import { CreateOrderService } from '../../application/services/order/create-order.service';
-import { CreateOrderDto } from '../../application/services/order/create-order.dto';
+import { CreateOrderUsecase } from '../../application/usecases/order/create-order.usecase';
+import { CreateOrderDto } from '../../application/usecases/order/create-order.dto';
 import { UserSession } from '../../infra/interfaces/user-session.interface';
 import { OrderFullResponse, OrderResponse } from '../response/order.response';
 import { AllRoles } from '../helpers/roles.helpers';
@@ -28,7 +28,7 @@ import { OrderListRepository } from '../../application/repositories/order-list-r
 @Controller('orders')
 export class OrderController {
   constructor(
-    private createOrderService: CreateOrderService,
+    private createOrderService: CreateOrderUsecase,
     private prisma: PrismaService,
     private orderListRepository: OrderListRepository,
   ) {}

@@ -11,6 +11,7 @@ export interface UserFields {
   recoverPasswordToken: string | null;
   recoverPasswordTokenExpire: Date | null;
   googleToken: string | null;
+  firebaseUserIdentifier: string | null;
   role: Role | null;
   lastLogin: Date | null;
   externalId: ExternalID;
@@ -25,6 +26,7 @@ export class User implements UserFields {
   recoverPasswordToken: string | null;
   recoverPasswordTokenExpire: Date | null;
   googleToken: string | null;
+  firebaseUserIdentifier: string | null;
   role: Role | null;
   lastLogin: Date | null;
   externalId: ExternalID;
@@ -38,6 +40,7 @@ export class User implements UserFields {
     this.recoverPasswordToken = input.recoverPasswordToken;
     this.recoverPasswordTokenExpire = input.recoverPasswordTokenExpire;
     this.googleToken = input.googleToken;
+    this.firebaseUserIdentifier = input.firebaseUserIdentifier;
     this.role = input.role;
     this.lastLogin = input.lastLogin;
     this.externalId = input.externalId;

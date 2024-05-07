@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ProfileController } from '../../presentation/controllers/profile.controller';
-import { ProfileService } from '../../application/services/profile/profile.service';
+import { ProfileService } from '../../application/services/profile.service';
 import { UserRepository } from '../../application/repositories/user-repository.interface';
 import { AdminRepository } from '../../application/repositories/admin-repository.interface';
 import { CustomerRepository } from '../../application/repositories/customer-repository.interface';

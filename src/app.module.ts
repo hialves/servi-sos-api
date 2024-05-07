@@ -22,6 +22,8 @@ import { OrderModule } from './infra/modules/order.module';
 import { ApplicationErrorInterceptor } from './presentation/interceptors/application-error.interceptor';
 import { ServiceProviderCategoryModule } from './infra/modules/service-provider-category.module';
 import { ServiceProviderConfigModule } from './infra/modules/service-provider-config.module';
+import { NotificationModule } from './infra/frameworks/notification/notification.module';
+import { DomainModule } from './infra/modules/domain.module';
 
 @Module({
   imports: [
@@ -31,6 +33,7 @@ import { ServiceProviderConfigModule } from './infra/modules/service-provider-co
     }),
     AppConfigModule,
     PrometheusModule.register(),
+    NotificationModule,
     AuthModule,
     CustomerModule,
     NodeMailerModule,
@@ -43,6 +46,7 @@ import { ServiceProviderConfigModule } from './infra/modules/service-provider-co
     OrderModule,
     ServiceProviderCategoryModule,
     ServiceProviderConfigModule,
+    DomainModule,
   ],
   controllers: [AppController],
   providers: [

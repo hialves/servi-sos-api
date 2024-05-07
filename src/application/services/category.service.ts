@@ -1,11 +1,11 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { ID } from '../../../domain/entities';
-import { Category } from '../../../domain/entities/category';
-import { UpdateCategoryData } from '../../../domain/valueobjects/update-category-data';
-import { ApplicationError } from '../../errors/application-error';
-import { responseMessages } from '../../messages/response.messages';
-import { CategoryRepository } from '../../repositories/category-repository.interface';
-import { CreateCategoryDto } from '../../../presentation/dto/category/create-category.dto';
+import { ID } from '../../domain/entities';
+import { Category } from '../../domain/entities/category';
+import { UpdateCategoryData } from '../../domain/valueobjects/update-category-data';
+import { ApplicationError } from '../errors/application-error';
+import { responseMessages } from '../messages/response.messages';
+import { CategoryRepository } from '../repositories/category-repository.interface';
+import { CreateCategoryDto } from '../../presentation/dto/category/create-category.dto';
 
 @Injectable()
 export class CategoryService {

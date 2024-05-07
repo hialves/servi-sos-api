@@ -1,12 +1,12 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { ExternalID } from '../../../domain/entities';
-import { CustomerRepository } from '../../repositories/customer-repository.interface';
-import { ApplicationError } from '../../errors/application-error';
-import { responseMessages } from '../../messages/response.messages';
-import { Customer, CustomerFields } from '../../../domain/entities/customer';
-import { PasswordService } from '../../interfaces/password-service.interface';
-import { UpdateCustomerData } from '../../../domain/valueobjects/update-customer-data';
-import { CreateCustomerData } from '../../../domain/valueobjects/create-customer-data';
+import { ExternalID } from '../../domain/entities';
+import { CustomerRepository } from '../repositories/customer-repository.interface';
+import { ApplicationError } from '../errors/application-error';
+import { responseMessages } from '../messages/response.messages';
+import { Customer, CustomerFields } from '../../domain/entities/customer';
+import { PasswordService } from '../interfaces/password-service.interface';
+import { UpdateCustomerData } from '../../domain/valueobjects/update-customer-data';
+import { CreateCustomerData } from '../../domain/valueobjects/create-customer-data';
 
 @Injectable()
 export class CustomerService {

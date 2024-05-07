@@ -1,11 +1,11 @@
 import { HttpStatus } from '@nestjs/common';
 import { Role } from '@prisma/client';
-import { responseMessages } from '../../messages/response.messages';
-import { ApplicationError } from '../../errors/application-error';
-import { AdminRepository } from '../../repositories/admin-repository.interface';
-import { CustomerRepository } from '../../repositories/customer-repository.interface';
-import { ID } from '../../../domain/entities';
-import { UserRepository } from '../../repositories/user-repository.interface';
+import { responseMessages } from '../messages/response.messages';
+import { ApplicationError } from '../errors/application-error';
+import { AdminRepository } from '../repositories/admin-repository.interface';
+import { CustomerRepository } from '../repositories/customer-repository.interface';
+import { ID } from '../../domain/entities';
+import { UserRepository } from '../repositories/user-repository.interface';
 
 export class ProfileService {
   constructor(

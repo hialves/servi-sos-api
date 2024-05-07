@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { ServiceProviderCategoryRepository } from '../../../../application/repositories/service-provider-category.interface';
+import { Location } from '../../../../domain/valueobjects/location.value-object';
+import { ID } from '../../../../domain/entities';
 
 @Injectable()
 export class ServiceProviderCategoryPrismaRepository implements ServiceProviderCategoryRepository {
@@ -37,5 +39,20 @@ export class ServiceProviderCategoryPrismaRepository implements ServiceProviderC
     } catch (e) {
       return false;
     }
+  }
+
+  async getServiceProvidersInCategory(referencePoint: Location, meters: number, categoryId: ID) {
+    const parsed = `'POINT(${referencePoint.long} ${referencePoint.lat})'`;
+    return this.prisma.$queryRawUnsafe<{ serviceProviderId: ID; firebaseUserIdentifier: string | null }[]>(
+      `
+      SELECT 
+        spcategory."serviceProviderId", spconfig."firebaseUserIdentifier"
+      FROM "ServiceProviderCategory" spcategory
+      INNER JOIN "ServiceProviderConfig" spconfig ON spconfig."serviceProviderId" = spcategory."serviceProviderId"
+      WHERE
+        ST_DWithin(spconfig.coordinates, ST_GeomFromText(${parsed},4326)::geography, ${meters})
+        AND spcategory."categoryId" = ${categoryId}
+    `,
+    );
   }
 }

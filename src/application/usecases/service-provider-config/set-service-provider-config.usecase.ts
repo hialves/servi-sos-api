@@ -7,7 +7,7 @@ import { ApplicationError } from '../../errors/application-error';
 import { responseMessages } from '../../messages/response.messages';
 
 @Injectable()
-export class SetServiceProviderConfigService {
+export class SetServiceProviderConfigUsecase {
   constructor(
     private repository: ServiceProviderConfigRepository,
     private adminRepository: AdminRepository,

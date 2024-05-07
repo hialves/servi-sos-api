@@ -7,7 +7,7 @@ import { responseMessages } from '../../messages/response.messages';
 import { AdminRepository } from '../../repositories/admin-repository.interface';
 
 @Injectable()
-export class AddCategoryServiceProviderService {
+export class AddCategoryServiceProviderUsecase {
   constructor(
     private repository: ServiceProviderCategoryRepository,
     private categoryRepository: CategoryRepository,
