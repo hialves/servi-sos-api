@@ -33,9 +33,9 @@ model ServiceProviderConfig {
   serviceProviderId         Int                                  @id
   createdAt                 DateTime                             @default(now())
   updatedAt                 DateTime                             @updatedAt
-  lat                       Float
-  long                      Float
-  coordinates               Unsupported("geometry(Point, 4326)")
+  lat                       Float?
+  long                      Float?
+  coordinates               Unsupported("geometry(Point, 4326)")?
   firebaseUserIdentifier    String?
   serviceProvider           Admin                                @relation(fields: [serviceProviderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   categories                ServiceProviderCategory[]

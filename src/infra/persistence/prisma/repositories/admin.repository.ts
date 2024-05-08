@@ -2,9 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { ExternalID, ID } from '../../../../domain/entities';
 import { Admin } from '../../../../domain/entities/admin';
-import { Admin as PrismaAdmin } from '@prisma/client';
+import { Prisma, Admin as PrismaAdmin, PrismaClient } from '@prisma/client';
 import { AdminRepository } from '../../../../application/repositories/admin-repository.interface';
 import { CreateAdminData } from '../../../../domain/valueobjects/create-admin-data';
+import { DefaultArgs } from '@prisma/client/runtime/library';
+import { Transaction } from '../prisma.interface';
 
 function toDomain(result: PrismaAdmin | null): Admin | null {
   if (result) return new Admin(result);
@@ -19,18 +21,22 @@ export class AdminPrismaRepository implements AdminRepository {
     return this.prisma.admin;
   }
 
-  async create(input: CreateAdminData) {
+  async create(input: CreateAdminData, _tx?: Transaction) {
     const { password, role, ...adminData } = input.data;
-    const result = await this.prisma.$transaction(
-      async (tx) => {
-        return tx.admin.create({
-          data: { ...adminData, user: { create: { email: adminData.email, password, role } } },
-        });
-      },
-      { isolationLevel: 'ReadUncommitted' },
-    );
+    const fn = async (tx: Transaction) => {
+      const txResult = await tx.admin.create({
+        data: { ...adminData, user: { create: { email: adminData.email, password, role } } },
+      });
+      return new Admin(txResult);
+    };
 
-    return new Admin(result);
+    if (!_tx) {
+      return this.prisma.$transaction(async (tx) => {
+        return fn(tx);
+      });
+    }
+
+    return fn(_tx);
   }
 
   async findById(id: ID): Promise<Admin | null> {
@@ -64,5 +70,9 @@ export class AdminPrismaRepository implements AdminRepository {
       where: { userId },
     });
     return toDomain(result);
+  }
+
+  async wrapTransaction(callback: (tx: Transaction) => any) {
+    return this.prisma.$transaction((tx) => callback(tx));
   }
 }

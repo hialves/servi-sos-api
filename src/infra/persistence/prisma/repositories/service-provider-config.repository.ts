@@ -3,6 +3,8 @@ import { PrismaService } from '../prisma.service';
 import { ServiceProviderConfigRepository } from '../../../../application/repositories/service-provider-config.interface';
 import { Location } from '../../../../domain/valueobjects/location.value-object';
 import dayjs from 'dayjs';
+import { ID } from '../../../../domain/entities';
+import { Transaction } from '../prisma.interface';
 
 @Injectable()
 export class ServiceProviderConfigPrismaRepository implements ServiceProviderConfigRepository {
@@ -10,6 +12,10 @@ export class ServiceProviderConfigPrismaRepository implements ServiceProviderCon
 
   get repository() {
     return this.prisma.serviceProviderConfig;
+  }
+
+  async createEmpty(serviceProviderId: ID, tx: Transaction = this.prisma) {
+    await tx.$executeRaw`INSERT INTO "ServiceProviderConfig" ("updatedAt","serviceProviderId") VALUES (${dayjs().format('YYYY-MM-DD HH:mm:ss.SSS')}::timestamp,${serviceProviderId})`;
   }
 
   async setLocation(serviceProviderId: number, location: Location): Promise<void> {

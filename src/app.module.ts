@@ -24,6 +24,7 @@ import { ServiceProviderCategoryModule } from './infra/modules/service-provider-
 import { ServiceProviderConfigModule } from './infra/modules/service-provider-config.module';
 import { NotificationModule } from './infra/frameworks/notification/notification.module';
 import { DomainModule } from './infra/modules/domain.module';
+import { ServiceProviderModule } from './infra/modules/service-provider.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { DomainModule } from './infra/modules/domain.module';
     ServiceProviderCategoryModule,
     ServiceProviderConfigModule,
     DomainModule,
+    ServiceProviderModule,
   ],
   controllers: [AppController],
   providers: [
