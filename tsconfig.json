@@ -11,5 +11,8 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "strictNullChecks": true
+  },
+  "watchOptions": {
+    "watchFile": "fixedPollingInterval"
   }
 }

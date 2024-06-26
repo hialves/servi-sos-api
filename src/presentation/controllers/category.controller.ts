@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -22,6 +23,7 @@ import { CategoryService } from '../../application/services/category.service';
 import { IsPublic } from '../decorators/public.decorator';
 import { UpdateCategoryDto } from '../dto/category/update-category.dto';
 import { CategoryFullResponse, CategoryNoSubResponse } from '../response/category.response';
+import { CategoryListFilterDto } from '../dto/category/category-list-filter.dto';
 
 @ApiTags('Category')
 @Controller('categories')
@@ -45,8 +47,15 @@ export class CategoryController {
   @IsPublic()
   @ApiOkResponse({ type: CategoryFullResponse, isArray: true })
   @Get()
-  async findAll(@Query() filters?: PaginatedDto) {
-    const result = await this.repository.findMany({ ...filters, include: { children: true } });
+  async findAll(@Query() filters?: CategoryListFilterDto) {
+    const parentId = filters?.parentId ? Number(filters.parentId) : null;
+    let rest = {};
+    if (filters) {
+      const { parentId: _, ...restFilters } = filters;
+      rest = restFilters;
+    }
+
+    const result = await this.repository.findMany({ ...rest, where: { parentId }, include: { children: true } });
     return result;
   }
 

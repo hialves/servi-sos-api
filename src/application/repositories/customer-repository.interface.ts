@@ -9,4 +9,5 @@ export abstract class CustomerRepository {
   abstract findByEmail(email: string): Promise<Customer | null>;
   abstract update(input: Customer): Promise<Customer>;
   abstract getByUserId(userId: ID): Promise<Customer | null>;
+  abstract findByGoogleId(googleId: string): Promise<Customer | null>;
 }

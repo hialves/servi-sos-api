@@ -20,11 +20,11 @@ export class CustomerPrismaRepository implements CustomerRepository {
   }
 
   async create(input: CreateCustomerData) {
-    const { password, role, ...customerData } = input.data;
+    const { password, role, googleId, ...customerData } = input.data;
     const result = await this.prisma.$transaction(
       async (tx) => {
         return tx.customer.create({
-          data: { ...customerData, user: { create: { email: customerData.email, password, role } } },
+          data: { ...customerData, user: { create: { email: customerData.email, password, role, googleId } } },
         });
       },
       { isolationLevel: 'ReadUncommitted' },
@@ -43,6 +43,13 @@ export class CustomerPrismaRepository implements CustomerRepository {
   async findByExternalId(externalId: ExternalID): Promise<Customer | null> {
     const result = await this.repository.findUnique({
       where: { externalId },
+    });
+    return toDomain(result);
+  }
+
+  async findByGoogleId(googleId: string): Promise<Customer | null> {
+    const result = await this.repository.findFirst({
+      where: { user: { googleId } },
     });
     return toDomain(result);
   }

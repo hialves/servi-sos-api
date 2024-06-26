@@ -23,6 +23,7 @@ import { OrderFullResponse, OrderResponse } from '../response/order.response';
 import { AllRoles } from '../helpers/roles.helpers';
 import { Location } from '../../domain/valueobjects/location.value-object';
 import { OrderListRepository } from '../../application/repositories/order-list-repository.interface';
+import { CustomerRepository } from '../../application/repositories/customer-repository.interface';
 
 @ApiTags('Order')
 @Controller('orders')
@@ -31,6 +32,7 @@ export class OrderController {
     private createOrderService: CreateOrderUsecase,
     private prisma: PrismaService,
     private orderListRepository: OrderListRepository,
+    private customerRepository: CustomerRepository,
   ) {}
 
   private get repository() {
@@ -52,6 +54,15 @@ export class OrderController {
       ...filters,
       include: { category: true, customer: true, serviceProvider: true },
     });
+  }
+
+  @Roles(...AllRoles)
+  @ApiOkResponse({ type: OrderFullResponse })
+  @Get('my-orders')
+  async myOrders(@Session() session: UserSession) {
+    const customer = await this.customerRepository.getByUserId(session.userId);
+    const result = await this.orderListRepository.customerOrders(customer!.externalId);
+    return result;
   }
 
   @Roles(...AllRoles)

@@ -98,7 +98,7 @@ model User {
   email                      String    @unique @db.VarChar
   recoverPasswordToken       String?   @db.VarChar
   recoverPasswordTokenExpire DateTime? @db.Timestamp
-  googleToken                String?   @db.VarChar
+  googleId                   String?   @unique @db.VarChar
   lastLogin                  DateTime? @db.Timestamp
   externalId                 String    @unique @default(uuid()) @db.Uuid()
   role                       Role?

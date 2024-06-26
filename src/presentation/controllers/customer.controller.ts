@@ -2,7 +2,7 @@ import { CreateCustomerDto } from '../dto/customer/create-customer.dto';
 import { CustomerService } from '../../application/services/customer.service';
 import { ExternalID } from '../../domain/entities';
 import { UpdateCustomerDto } from '../dto/customer/update-customer.dto';
-import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post, Query, Req, Res } from '@nestjs/common';
 import { PaginatedDto } from '../dto/list/filter-input.dto';
 import { Role } from '@prisma/client';
 import { ApiTags } from '@nestjs/swagger';
@@ -12,6 +12,9 @@ import { UpdateCustomerData } from '../../domain/valueobjects/update-customer-da
 import { PrismaService } from '../../infra/persistence/prisma/prisma.service';
 import { CreateCustomerData } from '../../domain/valueobjects/create-customer-data';
 import { CustomerMapper } from '../mappers/customer.mapper';
+import { CreateFromGoogleDto } from '../dto/auth/create-from-google.dto';
+import admin from 'firebase-admin';
+import { Request, Response } from 'express';
 
 @ApiTags('Customer')
 @Controller('customers')
@@ -32,6 +35,30 @@ export class CustomerController {
     const input = new CreateCustomerData({ name, email, password, phone, role: Role.customer });
     const result = await this.service.create(input);
     return this.findOne(result.externalId);
+  }
+
+  @IsPublic()
+  @Post('google')
+  async handleGoogleAuth(
+    @Body() dto: CreateFromGoogleDto,
+    @Req() request: Request,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const user = await admin.auth().verifyIdToken(dto.idToken);
+    const input = new CreateCustomerData({
+      name: user.name,
+      email: user.email!,
+      role: Role.customer,
+      googleId: user.uid,
+    });
+    const session = await this.service.handleGoogleAuth(input, request);
+    if (session) {
+      response.cookie('access_token', `Bearer ${session.accessToken}`, { expires: new Date(session.accessExpiresAt) });
+      response.cookie('refresh_token', `Bearer ${session.refreshToken}`, {
+        expires: new Date(session.refreshExpiresAt),
+      });
+      response.status(201).json({ accessToken: session.accessToken, refreshToken: session.refreshToken });
+    }
   }
 
   @Roles(Role.super_admin)

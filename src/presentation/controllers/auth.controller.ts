@@ -13,8 +13,10 @@ export class AuthController {
 
   @IsPublic()
   @Post('login')
-  login(@Body() input: LoginDto, @Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    return this.service.login(input, req, res);
+  async login(@Body() input: LoginDto, @Req() request: Request, @Res({ passthrough: true }) response: Response) {
+    const session = await this.service.login(input, request);
+    response.cookie('access_token', `Bearer ${session.accessToken}`, { expires: new Date(session.accessExpiresAt) });
+    response.cookie('refresh_token', `Bearer ${session.refreshToken}`, { expires: new Date(session.refreshExpiresAt) });
   }
 
   @IsPublic()

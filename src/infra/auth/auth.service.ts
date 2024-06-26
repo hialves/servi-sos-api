@@ -12,6 +12,7 @@ import { MailService } from '../../application/interfaces/mail-service.interface
 import { ApplicationError } from '../../application/errors/application-error';
 import { UserPrismaRepository } from '../persistence/prisma/repositories/user.repository';
 import { PasswordService } from '../../application/interfaces/password-service.interface';
+import { User } from '../../domain/entities/user';
 
 @Injectable()
 export class AuthService {
@@ -56,19 +57,21 @@ export class AuthService {
     await this.userRepository.update(user);
   }
 
-  // TODO: remover request e response
-  async login(input: LoginDto, request: Request, response: Response) {
+  async login(input: LoginDto, request: Request) {
     const user = await this.userRepository.findByEmail(input.email);
     if (!user || !user.password || !user.id) throw new InvalidCredentialsError();
     const passwordMatch = await bcrypt.compare(input.password, user.password);
     if (!passwordMatch) throw new InvalidCredentialsError();
 
+    return this.authenticateUser(user, request);
+  }
+
+  async authenticateUser(user: User, request: Request) {
     user.setLastLogin();
     await this.userRepository.update(user);
     const session = await this.sessionService.createAuthenticatedSession({ ...user, id: user.id }, request);
 
-    response.cookie('access_token', `Bearer ${session.accessToken}`, { expires: new Date(session.accessExpiresAt) });
-    response.cookie('refresh_token', `Bearer ${session.refreshToken}`, { expires: new Date(session.refreshExpiresAt) });
+    return session;
   }
 
   async refreshToken(refreshToken: string): Promise<string> {

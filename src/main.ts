@@ -16,7 +16,7 @@ async function bootstrap() {
   app.enableCors({ origin: '*' });
   app.use(json({ limit: '10mb' }));
   app.use(cookieParser());
-  app.useGlobalPipes(new ValidationPipe({ transform: true }));
+  app.useGlobalPipes(new ValidationPipe({ transform: true, transformOptions: { enableImplicitConversion: true } }));
 
   const configService = app.get(ConfigService);
   const port = configService.get('PORT') || 3000;

@@ -45,3 +45,6 @@ TODO.md
 
 # Database
 postgres
+
+*-firebase-*.json
+google-services.json

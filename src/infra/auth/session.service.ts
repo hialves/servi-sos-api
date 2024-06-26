@@ -93,7 +93,7 @@ export class SessionService {
   }
 
   static getBearerToken(request: Request): string | undefined {
-    const bearerToken = request.cookies.access_token;
+    const bearerToken = request.cookies.access_token || request.headers.authorization;
 
     if (bearerToken) {
       const match = bearerToken.trim().match(/^bearer\s(.+)$/i);

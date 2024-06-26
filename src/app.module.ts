@@ -25,6 +25,7 @@ import { ServiceProviderConfigModule } from './infra/modules/service-provider-co
 import { NotificationModule } from './infra/frameworks/notification/notification.module';
 import { DomainModule } from './infra/modules/domain.module';
 import { ServiceProviderModule } from './infra/modules/service-provider.module';
+import { TestController } from './presentation/controllers/test.controller';
 
 @Module({
   imports: [
@@ -50,7 +51,7 @@ import { ServiceProviderModule } from './infra/modules/service-provider.module';
     DomainModule,
     ServiceProviderModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, TestController],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },
     { provide: APP_GUARD, useClass: AuthGuard },
