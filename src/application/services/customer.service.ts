@@ -11,6 +11,7 @@ import { AuthService } from '../../infra/auth/auth.service';
 import { Request } from 'express';
 import { UserRepository } from '../repositories/user-repository.interface';
 import admin from 'firebase-admin';
+import { PaymentService } from '../interfaces/payment-service.interface';
 
 @Injectable()
 export class CustomerService {
@@ -19,6 +20,7 @@ export class CustomerService {
     private passwordService: PasswordService,
     private authService: AuthService,
     private userRepository: UserRepository,
+    private paymentService: PaymentService,
   ) {}
 
   async create(input: CreateCustomerData) {
@@ -44,11 +46,17 @@ export class CustomerService {
           photoURL: input.data.photoURL,
         })
         .catch((e) => e);
+
       const existsCustomer = await this.repository.findByEmail(input.data.email);
       if (!existsCustomer) {
         const newCustomer = await this.create(input);
+        const paymentCustomerId = await this.paymentService.createCustomer(newCustomer);
+        newCustomer.paymentCustomerId = paymentCustomerId;
+        await this.update(newCustomer.externalId, new UpdateCustomerData(newCustomer));
         const user = await this.userRepository.findById(newCustomer.userId!);
-        if (user) return this.authService.authenticateUser(user, request);
+        if (user) {
+          return this.authService.authenticateUser(user, request);
+        }
       } else {
         const user = await this.userRepository.findById(existsCustomer.userId!);
         if (user) return this.authService.authenticateUser(user, request);

@@ -30,15 +30,15 @@ model Admin {
 }
 
 model ServiceProviderConfig {
-  serviceProviderId         Int                                  @id
-  createdAt                 DateTime                             @default(now())
-  updatedAt                 DateTime                             @updatedAt
-  lat                       Float?
-  long                      Float?
-  coordinates               Unsupported("geometry(Point, 4326)")?
-  firebaseUserIdentifier    String?
-  serviceProvider           Admin                                @relation(fields: [serviceProviderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  categories                ServiceProviderCategory[]
+  serviceProviderId      Int                                   @id
+  createdAt              DateTime                              @default(now())
+  updatedAt              DateTime                              @updatedAt
+  lat                    Float?
+  long                   Float?
+  coordinates            Unsupported("geometry(Point, 4326)")?
+  firebaseUserIdentifier String?
+  serviceProvider        Admin                                 @relation(fields: [serviceProviderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  categories             ServiceProviderCategory[]
 }
 
 model ServiceProviderCategory {
@@ -64,18 +64,19 @@ model Asset {
 }
 
 model Customer {
-  id         Int      @id @default(autoincrement())
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  name       String   @db.VarChar
-  email      String   @db.VarChar
-  phone      String?  @db.VarChar
-  assetId    Int?     @unique
-  userId     Int?     @unique
-  externalId String   @unique @default(uuid()) @db.Uuid()
-  user       User?    @relation(fields: [userId], references: [id])
-  asset      Asset?   @relation(fields: [assetId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  orders     Order[]
+  id                Int      @id @default(autoincrement())
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  name              String   @db.VarChar
+  email             String   @db.VarChar
+  phone             String?  @db.VarChar
+  assetId           Int?     @unique
+  userId            Int?     @unique
+  externalId        String   @unique @default(uuid()) @db.Uuid()
+  paymentCustomerId String?
+  user              User?    @relation(fields: [userId], references: [id])
+  asset             Asset?   @relation(fields: [assetId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  orders            Order[]
 }
 
 model Session {

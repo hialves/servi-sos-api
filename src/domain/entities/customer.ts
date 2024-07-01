@@ -10,6 +10,7 @@ export interface CustomerFields {
   assetId: ID | null;
   userId: ID | null;
   externalId: ExternalID;
+  paymentCustomerId: string | null;
 }
 
 export class Customer implements CustomerFields {
@@ -22,6 +23,7 @@ export class Customer implements CustomerFields {
   assetId: ID | null;
   userId: ID | null;
   externalId: ExternalID;
+  paymentCustomerId: string;
 
   constructor(input: CustomerFields) {
     this.id = input.id;
@@ -33,5 +35,6 @@ export class Customer implements CustomerFields {
     this.assetId = input.assetId;
     this.userId = input.userId;
     this.externalId = input.externalId;
+    this.paymentCustomerId = input.paymentCustomerId!;
   }
 }

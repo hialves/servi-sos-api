@@ -2,7 +2,20 @@ import { CreateCustomerDto } from '../dto/customer/create-customer.dto';
 import { CustomerService } from '../../application/services/customer.service';
 import { ExternalID } from '../../domain/entities';
 import { UpdateCustomerDto } from '../dto/customer/update-customer.dto';
-import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post, Query, Req, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  NotFoundException,
+  Param,
+  Patch,
+  Post,
+  Query,
+  Req,
+  Res,
+  Session,
+} from '@nestjs/common';
 import { PaginatedDto } from '../dto/list/filter-input.dto';
 import { Role } from '@prisma/client';
 import { ApiTags } from '@nestjs/swagger';
@@ -15,6 +28,9 @@ import { CustomerMapper } from '../mappers/customer.mapper';
 import { CreateFromGoogleDto } from '../dto/auth/create-from-google.dto';
 import admin from 'firebase-admin';
 import { Request, Response } from 'express';
+import { UserSession } from '../../infra/interfaces/user-session.interface';
+import { PaymentService } from '../../application/interfaces/payment-service.interface';
+import { GetCustomerPaymentMethodsUsecase } from '../../application/usecases/customer/get-customer-payment-methods.usecase';
 
 @ApiTags('Customer')
 @Controller('customers')
@@ -22,6 +38,8 @@ export class CustomerController {
   constructor(
     private service: CustomerService,
     private prisma: PrismaService,
+    private paymentService: PaymentService,
+    private getCustomerPaymentMethods: GetCustomerPaymentMethodsUsecase,
   ) {}
 
   private get repository() {
@@ -87,5 +105,11 @@ export class CustomerController {
   @Delete(':id')
   async remove(@Param('id') externalId: ExternalID) {
     await this.repository.delete({ where: { externalId } });
+  }
+
+  @Roles(Role.customer)
+  @Post('payment-sheet')
+  async customerPaymentMethods(@Session() session: UserSession) {
+    return this.getCustomerPaymentMethods.execute(session.userId);
   }
 }

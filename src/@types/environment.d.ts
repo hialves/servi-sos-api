@@ -5,6 +5,7 @@ declare global {
     interface ProcessEnv {
       NODE_ENV: 'development' | 'production' | 'test';
       PORT: string;
+      DOMAIN: string;
       FRONT_END_DOMAIN: string;
       HOST_EMAIL: string;
       PORT_EMAIL: string;
@@ -15,11 +16,14 @@ declare global {
       SUPERADMIN_PASSWORD: string;
       SWAGGER_PATH: string;
       APP_PRICE_EACH_ORDER_TO_CUSTOMER: string;
+      NORMAL_SOLICITATION_PRICE_ID: string;
       DATABASE_URL: string;
       JWT_ACCESS_TOKEN_SECRET_KEY: string;
       JWT_ACCESS_TOKEN_DURATION: string;
       JWT_REFRESH_TOKEN_SECRET_KEY: string;
       JWT_REFRESH_TOKEN_DURATION: string;
+      STRIPE_PUBLISH_KEY: string;
+      STRIPE_SECRET_KEY: string;
     }
   }
 }

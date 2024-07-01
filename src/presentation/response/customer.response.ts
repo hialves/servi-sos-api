@@ -3,7 +3,7 @@ import { ExternalID, ID } from '../../domain/entities';
 import { CustomerFields } from '../../domain/entities/customer';
 import { UserResponse } from './user.response';
 
-export class CustomerResponse implements Omit<CustomerFields, 'id' | 'externalId' | 'userId'> {
+export class CustomerResponse implements Omit<CustomerFields, 'id' | 'externalId' | 'userId' | 'paymentCustomerId'> {
   @ApiProperty()
   id: ID;
   @ApiProperty()

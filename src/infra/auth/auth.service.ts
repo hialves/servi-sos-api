@@ -7,7 +7,7 @@ import { InvalidCredentialsError, NotFoundError } from '../../presentation/respo
 import { responseMessages } from '../../application/messages/response.messages';
 import { LoginDto } from '../../presentation/dto/auth/login.dto';
 import { SessionService } from './session.service';
-import { Request, Response } from 'express';
+import { Request } from 'express';
 import { MailService } from '../../application/interfaces/mail-service.interface';
 import { ApplicationError } from '../../application/errors/application-error';
 import { UserPrismaRepository } from '../persistence/prisma/repositories/user.repository';

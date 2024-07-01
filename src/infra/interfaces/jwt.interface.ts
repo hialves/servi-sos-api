@@ -5,4 +5,5 @@ export interface JwtPayload {
   sub: ID;
   email: string;
   role: Role | null;
+  entityId?: number;
 }

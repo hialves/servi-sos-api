@@ -26,6 +26,7 @@ import { NotificationModule } from './infra/frameworks/notification/notification
 import { DomainModule } from './infra/modules/domain.module';
 import { ServiceProviderModule } from './infra/modules/service-provider.module';
 import { TestController } from './presentation/controllers/test.controller';
+import { PaymentModule } from './infra/modules/payment.module';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { TestController } from './presentation/controllers/test.controller';
     ServiceProviderConfigModule,
     DomainModule,
     ServiceProviderModule,
+    PaymentModule,
   ],
   controllers: [AppController, TestController],
   providers: [

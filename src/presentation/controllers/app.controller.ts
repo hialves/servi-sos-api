@@ -15,7 +15,19 @@ export class AppController {
     return {
       name: `App v${version}`,
       version,
-      documentation: `/${this.configService.get('SWAGGER_PATH', 'docs')}`,
+      documentation: `${this.configService.get('DOMAIN')}/${this.configService.get('SWAGGER_PATH', 'docs')}`,
     };
+  }
+
+  @IsPublic()
+  @Get('success.html')
+  success() {
+    return 'success';
+  }
+
+  @IsPublic()
+  @Get('cancel.html')
+  cancel() {
+    return 'cancel';
   }
 }
