@@ -11,6 +11,7 @@ export interface CustomerFields {
   userId: ID | null;
   externalId: ExternalID;
   paymentCustomerId: string | null;
+  defaultPaymentMethodId: string | null;
 }
 
 export class Customer implements CustomerFields {
@@ -24,6 +25,7 @@ export class Customer implements CustomerFields {
   userId: ID | null;
   externalId: ExternalID;
   paymentCustomerId: string;
+  defaultPaymentMethodId: string | null;
 
   constructor(input: CustomerFields) {
     this.id = input.id;
@@ -36,5 +38,6 @@ export class Customer implements CustomerFields {
     this.userId = input.userId;
     this.externalId = input.externalId;
     this.paymentCustomerId = input.paymentCustomerId!;
+    this.defaultPaymentMethodId = input.defaultPaymentMethodId;
   }
 }

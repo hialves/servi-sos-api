@@ -79,6 +79,12 @@ export class CustomerController {
     }
   }
 
+  @Roles(Role.customer)
+  @Get('payment-methods')
+  async customerPaymentMethods(@Session() session: UserSession) {
+    return this.getCustomerPaymentMethods.execute(session.userId);
+  }
+
   @Roles(Role.super_admin)
   @Get()
   async findAll(@Query() filters: PaginatedDto) {
@@ -105,11 +111,5 @@ export class CustomerController {
   @Delete(':id')
   async remove(@Param('id') externalId: ExternalID) {
     await this.repository.delete({ where: { externalId } });
-  }
-
-  @Roles(Role.customer)
-  @Post('payment-sheet')
-  async customerPaymentMethods(@Session() session: UserSession) {
-    return this.getCustomerPaymentMethods.execute(session.userId);
   }
 }

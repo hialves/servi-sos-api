@@ -14,6 +14,13 @@ enum Role {
   manager
 }
 
+enum OrderStatus {
+  pending
+  processing
+  success
+  payment_failed
+}
+
 model Admin {
   id         Int                    @id @default(autoincrement())
   createdAt  DateTime               @default(now())
@@ -74,6 +81,7 @@ model Customer {
   userId            Int?     @unique
   externalId        String   @unique @default(uuid()) @db.Uuid()
   paymentCustomerId String?
+  defaultPaymentMethodId String?
   user              User?    @relation(fields: [userId], references: [id])
   asset             Asset?   @relation(fields: [assetId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   orders            Order[]
@@ -130,6 +138,7 @@ model Order {
   long              Float
   coordinates       Unsupported("geometry(Point, 4326)")
   done              Boolean                              @default(false)
+  status            OrderStatus                          @default(pending)
   price             Int
   agreedPrice       Int?
   description       String?

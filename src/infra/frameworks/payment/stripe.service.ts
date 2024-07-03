@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { Stripe } from 'stripe';
 import { PaymentService } from '../../../application/interfaces/payment-service.interface';
 import { Customer } from '../../../domain/entities/customer';
+import { ApplicationError } from '../../../application/errors/application-error';
 
 @Injectable()
 export class StripeService implements PaymentService {
@@ -41,10 +42,7 @@ export class StripeService implements PaymentService {
       currency: 'brl',
       customer: stripeCustomerId,
       setup_future_usage: 'off_session',
-      // payment_method_types: ['card'],
-      automatic_payment_methods: {
-        enabled: true,
-      },
+      automatic_payment_methods: { enabled: true },
     });
     return paymentIntent;
   }
@@ -55,5 +53,22 @@ export class StripeService implements PaymentService {
 
   async getCustomerPaymentMethods(stripeCustomerId: string): Promise<Stripe.ApiListPromise<Stripe.PaymentMethod>> {
     return this.client.customers.listPaymentMethods(stripeCustomerId);
+  }
+
+  async chargePaymentMethod(input: { stripeCustomerId: string; amount: number; paymentMethodId: string }) {
+    if (input.amount < 800) return new ApplicationError('Valor inválido', HttpStatus.BAD_REQUEST);
+    if ((await this.client.paymentMethods.retrieve(input.paymentMethodId)).customer !== input.stripeCustomerId)
+      return new ApplicationError('Método de pagamento não pertence ao usuário', HttpStatus.BAD_REQUEST);
+
+    const paymentIntent = await this.client.paymentIntents.create({
+      amount: input.amount,
+      currency: 'brl',
+      customer: input.stripeCustomerId,
+      automatic_payment_methods: { enabled: true },
+      payment_method: input.paymentMethodId,
+      off_session: true,
+      confirm: true,
+    });
+    return paymentIntent;
   }
 }

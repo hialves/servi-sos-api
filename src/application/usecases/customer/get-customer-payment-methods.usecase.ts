@@ -9,9 +9,15 @@ export class GetCustomerPaymentMethodsUsecase {
     private paymentService: PaymentService,
   ) {}
 
-  async execute(userId: number): Promise<{ id: string; brand: string; last4: string }[]> {
+  async execute(userId: number): Promise<{ id: string; brand: string; last4: string; isDefault: boolean }[]> {
     const customer = await this.customerRepository.getByUserId(userId);
     const paymentMethods = await this.paymentService.getCustomerPaymentMethods(customer!.paymentCustomerId);
-    return paymentMethods.data.map((item) => ({ id: item.id, brand: item.card!.brand, last4: item.card!.last4 }));
+
+    return paymentMethods.data.map((item) => ({
+      id: item.id,
+      brand: item.card!.brand,
+      last4: item.card!.last4,
+      isDefault: customer?.defaultPaymentMethodId !== undefined && customer.defaultPaymentMethodId === item.id,
+    }));
   }
 }

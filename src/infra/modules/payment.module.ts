@@ -4,10 +4,16 @@ import { PaymentController } from '../../presentation/controllers/payment.contro
 import { PaymentService } from '../../application/interfaces/payment-service.interface';
 import { CheckoutOrderUsecase } from '../../application/usecases/payment/checkout-order.usecase';
 import { CreatePaymentUsecase } from '../../application/usecases/payment/create-payment.usecase';
+import { ChargePaymentMethodUsecase } from '../../application/usecases/payment/charge-payment-method.usecase';
 
 @Module({
   controllers: [PaymentController],
-  providers: [{ provide: PaymentService, useClass: StripeService }, CheckoutOrderUsecase, CreatePaymentUsecase],
+  providers: [
+    { provide: PaymentService, useClass: StripeService },
+    CheckoutOrderUsecase,
+    CreatePaymentUsecase,
+    ChargePaymentMethodUsecase,
+  ],
   exports: [PaymentService],
 })
 export class PaymentModule {}

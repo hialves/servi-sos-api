@@ -3,33 +3,34 @@ import { PaymentService } from '../../interfaces/payment-service.interface';
 import { CustomerRepository } from '../../repositories/customer-repository.interface';
 import { ApplicationError } from '../../errors/application-error';
 import { responseMessages } from '../../messages/response.messages';
+import { ChargePaymentMethodDto } from '../../../presentation/dto/payment/charge-payment-method.dto';
+import Stripe from 'stripe';
 
 @Injectable()
-export class CreatePaymentUsecase {
+export class ChargePaymentMethodUsecase {
   constructor(
     private customerRepository: CustomerRepository,
     private paymentService: PaymentService,
   ) {}
 
-  async execute(userId: number): Promise<
-    | ApplicationError
-    | {
-        paymentIntent: string | null;
-        ephemeralKey?: string;
-        customer: string;
-      }
-  > {
+  async execute(
+    dto: ChargePaymentMethodDto,
+    userId: number,
+  ): Promise<ApplicationError | Stripe.Response<Stripe.PaymentIntent>> {
     const customer = await this.customerRepository.getByUserId(userId);
     if (!customer) return new ApplicationError(responseMessages.user.notCustomer, HttpStatus.UNPROCESSABLE_ENTITY);
 
-    const ephemeralKey = await this.paymentService.createEphemeralKey(customer.paymentCustomerId);
     // TODO: remover o 800 mockado
-    const paymentIntent = await this.paymentService.createIntent(customer.paymentCustomerId, 800);
+    try {
+      const paymentIntent = await this.paymentService.chargePaymentMethod({
+        stripeCustomerId: customer.paymentCustomerId,
+        amount: 800,
+        paymentMethodId: dto.paymentMethodId,
+      });
 
-    return {
-      paymentIntent: paymentIntent.client_secret,
-      ephemeralKey: ephemeralKey.secret,
-      customer: customer.paymentCustomerId,
-    };
+      return paymentIntent;
+    } catch (e) {
+      throw e;
+    }
   }
 }
