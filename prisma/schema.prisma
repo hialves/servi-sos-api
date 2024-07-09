@@ -146,6 +146,7 @@ model Order {
   categoryId        Int?
   customerId        Int?
   serviceProviderId Int?
+  paymentGatewayOrderId  String?
   category          Category?                            @relation(fields: [categoryId], references: [id], onDelete: SetNull, onUpdate: Cascade)
   customer          Customer?                            @relation(fields: [customerId], references: [id], onDelete: SetNull, onUpdate: Cascade)
   serviceProvider   Admin?                               @relation(fields: [serviceProviderId], references: [id], onDelete: SetNull, onUpdate: Cascade)

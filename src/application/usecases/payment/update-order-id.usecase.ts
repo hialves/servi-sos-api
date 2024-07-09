@@ -4,38 +4,29 @@ import { ApplicationError } from '../../errors/application-error';
 import { responseMessages } from '../../messages/response.messages';
 import { OrderRepository } from '../../repositories/order-repository.interface';
 import { StripeService } from '../../../infra/frameworks/payment/stripe.service';
-import { AppConfig } from '../../../infra/config/app.config';
 
 @Injectable()
-export class CreatePaymentUsecase {
+export class UpdateOrderIdUsecase {
   constructor(
     private customerRepository: CustomerRepository,
     private stripeService: StripeService,
-    private appConfig: AppConfig,
+    private orderRepository: OrderRepository,
   ) {}
 
-  async execute(input: { userId: number }): Promise<
-    | ApplicationError
-    | {
-        paymentIntent: string | null;
-        ephemeralKey?: string;
-        customer: string;
-      }
-  > {
+  async execute(input: {
+    externalOrderId: string;
+    userId: number;
+    paymentIntentId: string;
+  }): Promise<ApplicationError | void> {
     const customer = await this.customerRepository.getByUserId(input.userId);
     if (!customer) return new ApplicationError(responseMessages.user.notCustomer, HttpStatus.UNPROCESSABLE_ENTITY);
+    const order = await this.orderRepository.findByExternalId(input.externalOrderId);
+    if (!order) return new ApplicationError(responseMessages.notFound(responseMessages.order), HttpStatus.NOT_FOUND);
 
-    const ephemeralKey = await this.stripeService.createEphemeralKey(customer.paymentCustomerId);
-
-    const paymentIntent = await this.stripeService.createIntent(
-      customer.paymentCustomerId,
-      this.appConfig.getOrderPrice(),
-    );
-
-    return {
-      paymentIntent: paymentIntent.client_secret,
-      ephemeralKey: ephemeralKey.secret,
-      customer: customer.paymentCustomerId,
-    };
+    await this.stripeService.updateIntentOrderId({
+      intentId: input.paymentIntentId,
+      orderId: order.id,
+      paymentCustomerId: customer.paymentCustomerId,
+    });
   }
 }

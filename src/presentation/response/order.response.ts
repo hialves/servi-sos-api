@@ -4,9 +4,11 @@ import { OrderFields } from '../../domain/entities/order';
 import { CustomerNoUserResponse } from './customer.response';
 import { CategoryNoSubResponse } from './category.response';
 import { AdminNoUserResponse } from './admin.response';
+import { OrderStatus } from '@prisma/client';
 
 export class OrderResponse
-  implements Omit<OrderFields, 'id' | 'categoryId' | 'userId' | 'customerId' | 'serviceProviderId'>
+  implements
+    Omit<OrderFields, 'id' | 'categoryId' | 'userId' | 'customerId' | 'serviceProviderId' | 'paymentGatewayOrderId'>
 {
   @ApiProperty()
   id: ID;
@@ -28,6 +30,8 @@ export class OrderResponse
   externalId: ExternalID;
   @ApiPropertyOptional()
   description: string | null;
+  @ApiProperty()
+  status: OrderStatus;
 }
 
 export class OrderFullResponse extends OrderResponse {

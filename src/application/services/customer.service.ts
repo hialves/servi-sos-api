@@ -11,7 +11,7 @@ import { AuthService } from '../../infra/auth/auth.service';
 import { Request } from 'express';
 import { UserRepository } from '../repositories/user-repository.interface';
 import admin from 'firebase-admin';
-import { PaymentService } from '../interfaces/payment-service.interface';
+import { StripeService } from '../../infra/frameworks/payment/stripe.service';
 
 @Injectable()
 export class CustomerService {
@@ -20,7 +20,7 @@ export class CustomerService {
     private passwordService: PasswordService,
     private authService: AuthService,
     private userRepository: UserRepository,
-    private paymentService: PaymentService,
+    private stripeService: StripeService,
   ) {}
 
   async create(input: CreateCustomerData) {
@@ -50,7 +50,7 @@ export class CustomerService {
       const existsCustomer = await this.repository.findByEmail(input.data.email);
       if (!existsCustomer) {
         const newCustomer = await this.create(input);
-        const paymentCustomerId = await this.paymentService.createCustomer(newCustomer);
+        const paymentCustomerId = await this.stripeService.createCustomer(newCustomer);
         newCustomer.paymentCustomerId = paymentCustomerId;
         await this.update(newCustomer.externalId, new UpdateCustomerData(newCustomer));
         const user = await this.userRepository.findById(newCustomer.userId!);

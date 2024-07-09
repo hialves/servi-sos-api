@@ -1,3 +1,4 @@
+import { OrderStatus } from '@prisma/client';
 import { ExternalID, ID } from '.';
 import { Location } from '../valueobjects/location.value-object';
 
@@ -15,6 +16,8 @@ export interface OrderFields {
   agreedPrice: number | null;
   externalId: ExternalID;
   description: string | null;
+  paymentGatewayOrderId: string | null;
+  status: OrderStatus;
 }
 
 export class Order {
@@ -30,6 +33,8 @@ export class Order {
   agreedPrice: number | null;
   externalId: ExternalID;
   description: string | null;
+  paymentGatewayOrderId: string | null;
+  status: OrderStatus;
 
   constructor(input: OrderFields) {
     this.id = input.id;
@@ -44,6 +49,8 @@ export class Order {
     this.agreedPrice = input.agreedPrice;
     this.externalId = input.externalId;
     this.description = input.description;
+    this.paymentGatewayOrderId = input.paymentGatewayOrderId;
+    this.status = input.status;
   }
 
   changeCategory(categoryId: ID) {
@@ -65,5 +72,10 @@ export class Order {
   unassignServiceProvider() {
     this.serviceProviderId = null;
     this.agreedPrice = null;
+  }
+
+  unwrap() {
+    const { location, ...rest } = this;
+    return { ...rest, lat: location.lat, long: location.long };
   }
 }

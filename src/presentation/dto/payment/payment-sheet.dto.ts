@@ -1,10 +1,6 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export class ChargePaymentMethodDto {
-  @IsNotEmpty()
-  @IsString()
-  paymentMethodId: string;
-
+export class PaymentSheetDto {
   @IsNotEmpty()
   @IsString()
   externalOrderId: string;

@@ -92,4 +92,10 @@ export const responseMessages = {
     categoryNotFinal: 'Categoria inválida',
     alreadyRemovedOrInvalid: 'Categoria já removida ou inválida',
   },
+
+  order: {
+    entity: 'Pedido',
+    finalLetter: 'o',
+    orderIdInvalid: 'Identificador de pedido inválido',
+  },
 };

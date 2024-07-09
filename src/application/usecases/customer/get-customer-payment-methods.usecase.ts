@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { PaymentService } from '../../interfaces/payment-service.interface';
 import { CustomerRepository } from '../../repositories/customer-repository.interface';
+import { StripeService } from '../../../infra/frameworks/payment/stripe.service';
 
 @Injectable()
 export class GetCustomerPaymentMethodsUsecase {
   constructor(
     private customerRepository: CustomerRepository,
-    private paymentService: PaymentService,
+    private stripeService: StripeService,
   ) {}
 
   async execute(userId: number): Promise<{ id: string; brand: string; last4: string; isDefault: boolean }[]> {
     const customer = await this.customerRepository.getByUserId(userId);
-    const paymentMethods = await this.paymentService.getCustomerPaymentMethods(customer!.paymentCustomerId);
+    const paymentMethods = await this.stripeService.getCustomerPaymentMethods(customer!.paymentCustomerId);
 
     return paymentMethods.data.map((item) => ({
       id: item.id,

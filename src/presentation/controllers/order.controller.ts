@@ -7,6 +7,7 @@ import {
   Param,
   ParseFloatPipe,
   ParseIntPipe,
+  Patch,
   Post,
   Query,
   Session,
@@ -24,6 +25,8 @@ import { AllRoles } from '../helpers/roles.helpers';
 import { Location } from '../../domain/valueobjects/location.value-object';
 import { OrderListRepository } from '../../application/repositories/order-list-repository.interface';
 import { CustomerRepository } from '../../application/repositories/customer-repository.interface';
+import { UpdateOrderDto } from '../dto/order/update-order.dto';
+import { OrderService } from '../../application/services/order.service';
 
 @ApiTags('Order')
 @Controller('orders')
@@ -33,6 +36,7 @@ export class OrderController {
     private prisma: PrismaService,
     private orderListRepository: OrderListRepository,
     private customerRepository: CustomerRepository,
+    private orderService: OrderService,
   ) {}
 
   private get repository() {
@@ -88,5 +92,12 @@ export class OrderController {
     });
     if (!result) throw new NotFoundException();
     return result;
+  }
+
+  @Roles(...AllRoles)
+  @ApiOkResponse({ type: OrderFullResponse })
+  @Patch(':id')
+  async update(@Param('id') externalId: ExternalID, @Body() dto: UpdateOrderDto) {
+    return this.orderService.update(externalId, dto);
   }
 }

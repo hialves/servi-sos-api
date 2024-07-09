@@ -29,7 +29,6 @@ import { CreateFromGoogleDto } from '../dto/auth/create-from-google.dto';
 import admin from 'firebase-admin';
 import { Request, Response } from 'express';
 import { UserSession } from '../../infra/interfaces/user-session.interface';
-import { PaymentService } from '../../application/interfaces/payment-service.interface';
 import { GetCustomerPaymentMethodsUsecase } from '../../application/usecases/customer/get-customer-payment-methods.usecase';
 
 @ApiTags('Customer')
@@ -38,7 +37,6 @@ export class CustomerController {
   constructor(
     private service: CustomerService,
     private prisma: PrismaService,
-    private paymentService: PaymentService,
     private getCustomerPaymentMethods: GetCustomerPaymentMethodsUsecase,
   ) {}
 

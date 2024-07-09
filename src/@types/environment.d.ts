@@ -15,7 +15,7 @@ declare global {
       SUPERADMIN_EMAIL: string;
       SUPERADMIN_PASSWORD: string;
       SWAGGER_PATH: string;
-      APP_PRICE_EACH_ORDER_TO_CUSTOMER: string;
+      NORMAL_SOLICITATION_PRODUCT_ID: string;
       NORMAL_SOLICITATION_PRICE_ID: string;
       DATABASE_URL: string;
       JWT_ACCESS_TOKEN_SECRET_KEY: string;
