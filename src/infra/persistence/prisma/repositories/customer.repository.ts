@@ -71,4 +71,8 @@ export class CustomerPrismaRepository implements CustomerRepository {
     });
     return toDomain(result);
   }
+
+  async setFirebaseIdentifier(customerId: number, firebaseUserIdentifier: string | null): Promise<void> {
+    await this.prisma.customer.update({ where: { id: customerId }, data: { firebaseUserIdentifier } });
+  }
 }

@@ -3,13 +3,9 @@ import { Stripe } from 'stripe';
 import { PaymentService } from '../../../application/interfaces/payment-service.interface';
 import { Customer } from '../../../domain/entities/customer';
 import { ApplicationError } from '../../../application/errors/application-error';
-import { OrderRepository } from '../../../application/repositories/order-repository.interface';
-import { OrderStatus } from '@prisma/client';
 
 @Injectable()
 export class StripeService implements PaymentService {
-  constructor(private orderRepository: OrderRepository) {}
-
   private client = new Stripe(process.env.STRIPE_SECRET_KEY);
 
   async createCheckoutSession(stripeCustomerId: string) {
@@ -96,35 +92,17 @@ export class StripeService implements PaymentService {
     return paymentIntent;
   }
 
-  async getWebhookData<T extends string | Buffer>(body: T, signature: string, secret: string) {
+  async getWebhookData<T extends string | Buffer>(
+    body: T,
+    signature: string,
+    secret: string,
+  ): Promise<Stripe.Event | undefined> {
     try {
       const event = this.client.webhooks.constructEvent(body, signature, secret);
-
-      switch (event.type) {
-        case 'payment_intent.succeeded':
-          return this.orderRepository.findById(+event.data.object.metadata.orderId).then((order) => {
-            if (order) {
-              order.status = OrderStatus.success;
-              this.orderRepository.update(order).catch((e) => e);
-            }
-          });
-
-        case 'payment_intent.payment_failed':
-          return this.orderRepository.findById(+event.data.object.metadata.orderId).then((order) => {
-            if (order) {
-              order.status = OrderStatus.payment_failed;
-              this.orderRepository.update(order).catch((e) => e);
-            }
-          });
-        case 'payment_intent.processing':
-          return this.orderRepository.findById(+event.data.object.metadata.orderId).then((order) => {
-            if (order) {
-              order.status = OrderStatus.processing;
-              this.orderRepository.update(order).catch((e) => e);
-            }
-          });
-      }
-    } catch (e) {}
+      return event;
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   async getProductPrice(productId: string) {

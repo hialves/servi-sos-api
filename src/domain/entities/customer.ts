@@ -12,6 +12,7 @@ export interface CustomerFields {
   externalId: ExternalID;
   paymentCustomerId: string | null;
   defaultPaymentMethodId: string | null;
+  firebaseUserIdentifier: string | null;
 }
 
 export class Customer implements CustomerFields {
@@ -26,6 +27,7 @@ export class Customer implements CustomerFields {
   externalId: ExternalID;
   paymentCustomerId: string;
   defaultPaymentMethodId: string | null;
+  firebaseUserIdentifier: string | null;
 
   constructor(input: CustomerFields) {
     this.id = input.id;
@@ -39,5 +41,6 @@ export class Customer implements CustomerFields {
     this.externalId = input.externalId;
     this.paymentCustomerId = input.paymentCustomerId!;
     this.defaultPaymentMethodId = input.defaultPaymentMethodId;
+    this.firebaseUserIdentifier = input.firebaseUserIdentifier;
   }
 }

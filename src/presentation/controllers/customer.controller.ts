@@ -18,7 +18,7 @@ import {
 } from '@nestjs/common';
 import { PaginatedDto } from '../dto/list/filter-input.dto';
 import { Role } from '@prisma/client';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiNoContentResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Roles } from '../decorators/roles.decorator';
 import { IsPublic } from '../decorators/public.decorator';
 import { UpdateCustomerData } from '../../domain/valueobjects/update-customer-data';
@@ -30,6 +30,8 @@ import admin from 'firebase-admin';
 import { Request, Response } from 'express';
 import { UserSession } from '../../infra/interfaces/user-session.interface';
 import { GetCustomerPaymentMethodsUsecase } from '../../application/usecases/customer/get-customer-payment-methods.usecase';
+import { SetFirebaseIdentifierCustomerUsecase } from '../../application/usecases/customer/set-firebase-identifier-customer.usecase';
+import { SetFirebaseIdentifierServiceProviderDto } from '../dto/service-provider-config/set-firebase-identifier-service-provider.dto';
 
 @ApiTags('Customer')
 @Controller('customers')
@@ -38,6 +40,7 @@ export class CustomerController {
     private service: CustomerService,
     private prisma: PrismaService,
     private getCustomerPaymentMethods: GetCustomerPaymentMethodsUsecase,
+    private setFirebaseIdentifierCustomer: SetFirebaseIdentifierCustomerUsecase,
   ) {}
 
   private get repository() {
@@ -109,5 +112,13 @@ export class CustomerController {
   @Delete(':id')
   async remove(@Param('id') externalId: ExternalID) {
     await this.repository.delete({ where: { externalId } });
+  }
+
+  @ApiOperation({ summary: 'Atualiza o token de notificação do cliente' })
+  @Roles(Role.super_admin, Role.customer)
+  @ApiNoContentResponse()
+  @Post('firebase-identifier')
+  setFirebaseIdentifier(@Body() dto: SetFirebaseIdentifierServiceProviderDto, @Session() session: UserSession) {
+    return this.setFirebaseIdentifierCustomer.execute(session.userId, dto.firebaseIdentifier);
   }
 }

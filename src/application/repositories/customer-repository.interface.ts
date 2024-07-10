@@ -10,4 +10,5 @@ export abstract class CustomerRepository {
   abstract update(input: Customer): Promise<Customer>;
   abstract getByUserId(userId: ID): Promise<Customer | null>;
   abstract findByGoogleId(googleId: string): Promise<Customer | null>;
+  abstract setFirebaseIdentifier(customerId: ID, firebaseUserIdentifier: string | null): Promise<void>;
 }

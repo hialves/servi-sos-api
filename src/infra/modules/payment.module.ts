@@ -6,8 +6,10 @@ import { CreatePaymentUsecase } from '../../application/usecases/payment/create-
 import { ChargePaymentMethodUsecase } from '../../application/usecases/payment/charge-payment-method.usecase';
 import { HandleWebhookUsecase } from '../../application/usecases/payment/handle-webhook.usecase';
 import { UpdateOrderIdUsecase } from '../../application/usecases/payment/update-order-id.usecase';
+import { NotificationModule } from '../frameworks/notification/notification.module';
 
 @Module({
+  imports: [NotificationModule],
   controllers: [PaymentController],
   providers: [
     StripeService,

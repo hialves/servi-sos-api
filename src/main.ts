@@ -4,7 +4,6 @@ import cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { Logger, ValidationPipe } from '@nestjs/common';
-import { json } from 'express';
 import { generateFolders } from './infra/persistence/asset/generate-folders';
 import { useContainer } from 'class-validator';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -14,10 +13,8 @@ async function bootstrap() {
   generateFolders();
   const app = await NestFactory.create(AppModule, { bodyParser: false });
   app.enableCors({ origin: '*' });
-  app.use(json({ limit: '10mb' }));
   app.use(cookieParser());
   app.useGlobalPipes(new ValidationPipe({ transform: true, transformOptions: { enableImplicitConversion: true } }));
-
   const configService = app.get(ConfigService);
   const port = configService.get('PORT') || 3000;
   useContainer(app.select(AppModule), { fallbackOnErrors: true });

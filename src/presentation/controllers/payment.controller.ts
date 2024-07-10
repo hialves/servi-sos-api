@@ -64,7 +64,8 @@ export class PaymentController {
 
   @IsPublic()
   @Post('webhook')
-  async webhook(@Body() body, @Headers('stripe-signature') stripeSignature: string): Promise<void> {
-    this.handleWebhook.execute(body, stripeSignature);
+  async webhook(@Body() raw: Buffer, @Headers('stripe-signature') stripeSignature: string): Promise<void> {
+    // console.log({ body, stripeSignature });
+    this.handleWebhook.execute(raw, stripeSignature);
   }
 }

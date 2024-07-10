@@ -17,5 +17,9 @@ export abstract class PaymentService {
   }): Promise<Stripe.Response<Stripe.PaymentIntent> | ApplicationError>;
   abstract createEphemeralKey(stripeCustomerId: string): Promise<Stripe.Response<Stripe.EphemeralKey>>;
   abstract getCustomerPaymentMethods(stripeCustomerId: string): Promise<Stripe.ApiListPromise<Stripe.PaymentMethod>>;
-  abstract getWebhookData<T extends string | Buffer>(body: T, signature: string, secret: string): Promise<any>;
+  abstract getWebhookData<T extends string | Buffer>(
+    body: T,
+    signature: string,
+    secret: string,
+  ): Promise<Stripe.Event | undefined>;
 }

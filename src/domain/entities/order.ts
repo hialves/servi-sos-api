@@ -76,6 +76,6 @@ export class Order {
 
   unwrap() {
     const { location, ...rest } = this;
-    return { ...rest, lat: location.lat, long: location.long };
+    return { ...rest, ...location };
   }
 }

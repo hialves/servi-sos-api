@@ -97,5 +97,9 @@ export const responseMessages = {
     entity: 'Pedido',
     finalLetter: 'o',
     orderIdInvalid: 'Identificador de pedido inválido',
+    notification: {
+      confirmBody: 'Informamos os profissionais do seu pedido',
+      confirmTitle: (orderId: string | number) => `Pedido #${orderId} confirmado`,
+    },
   },
 };

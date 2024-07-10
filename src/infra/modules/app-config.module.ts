@@ -5,6 +5,7 @@ import { PaymentModule } from './payment.module';
 @Global()
 @Module({
   imports: [PaymentModule],
+  controllers: [],
   providers: [AppConfig],
   exports: [AppConfig],
 })

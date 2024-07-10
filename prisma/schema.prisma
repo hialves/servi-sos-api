@@ -82,6 +82,7 @@ model Customer {
   externalId        String   @unique @default(uuid()) @db.Uuid()
   paymentCustomerId String?
   defaultPaymentMethodId String?
+  firebaseUserIdentifier String?
   user              User?    @relation(fields: [userId], references: [id])
   asset             Asset?   @relation(fields: [assetId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   orders            Order[]

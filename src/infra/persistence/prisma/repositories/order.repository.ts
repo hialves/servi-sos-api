@@ -55,11 +55,16 @@ export class OrderPrismaRepository implements OrderRepository {
   }
 
   async update(input: Order): Promise<Order> {
-    const result = await this.repository.update({
-      where: { id: input.id },
-      data: input.unwrap(),
-      include: { category: true, customer: true, serviceProvider: true },
-    });
-    return toDomain(result);
+    try {
+      const result = await this.repository.update({
+        where: { id: input.id },
+        data: input.unwrap(),
+        include: { category: true, customer: true, serviceProvider: true },
+      });
+      return toDomain(result);
+    } catch (e) {
+      console.log('update error', e);
+      throw e;
+    }
   }
 }

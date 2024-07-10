@@ -4,7 +4,7 @@ import { CustomerFields } from '../../domain/entities/customer';
 import { UserResponse } from './user.response';
 
 export class CustomerResponse
-  implements Omit<CustomerFields, 'userId' | 'paymentCustomerId' | 'defaultPaymentMethodId'>
+  implements Omit<CustomerFields, 'userId' | 'paymentCustomerId' | 'defaultPaymentMethodId' | 'firebaseUserIdentifier'>
 {
   @ApiProperty()
   id: ID;
