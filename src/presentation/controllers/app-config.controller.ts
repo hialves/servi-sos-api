@@ -1,5 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiExcludeController, ApiTags } from '@nestjs/swagger';
 import { Roles } from '../decorators/roles.decorator';
 import { Role } from '@prisma/client';
 import { AppConfig } from '../../infra/config/app.config';
@@ -7,6 +7,7 @@ import { UpdatePriceDto } from '../dto/app-config/update-price.dto';
 import { Money } from '../../domain/valueobjects/money.value-object';
 
 @ApiTags('root')
+@ApiExcludeController()
 @Controller('super_admin/config')
 export class AppConfigController {
   constructor(private appConfig: AppConfig) {}
