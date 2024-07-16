@@ -1,6 +1,7 @@
-import { OrderStatus } from '@prisma/client';
+import { PaymentStatus } from '@prisma/client';
 import { ExternalID, ID } from '.';
 import { Location } from '../valueobjects/location.value-object';
+import dayjs from 'dayjs';
 
 export interface OrderFields {
   id: ID;
@@ -12,12 +13,14 @@ export interface OrderFields {
   lat: number;
   long: number;
   done: boolean;
+  published: boolean;
+  publishedAt: Date | null;
   price: number;
   agreedPrice: number | null;
   externalId: ExternalID;
   description: string | null;
   paymentGatewayOrderId: string | null;
-  status: OrderStatus;
+  paymentStatus: PaymentStatus;
 }
 
 export class Order {
@@ -29,12 +32,14 @@ export class Order {
   serviceProviderId: ID | null;
   location: Location;
   done: boolean;
+  published: boolean;
+  publishedAt: Date | null;
   price: number;
   agreedPrice: number | null;
   externalId: ExternalID;
   description: string | null;
   paymentGatewayOrderId: string | null;
-  status: OrderStatus;
+  paymentStatus: PaymentStatus;
 
   constructor(input: OrderFields) {
     this.id = input.id;
@@ -50,7 +55,9 @@ export class Order {
     this.externalId = input.externalId;
     this.description = input.description;
     this.paymentGatewayOrderId = input.paymentGatewayOrderId;
-    this.status = input.status;
+    this.paymentStatus = input.paymentStatus;
+    this.published = input.published;
+    this.publishedAt = input.publishedAt;
   }
 
   changeCategory(categoryId: ID) {
@@ -77,5 +84,13 @@ export class Order {
   unwrap() {
     const { location, ...rest } = this;
     return { ...rest, ...location };
+  }
+
+  publishOnPaymentSuccess(paymentGatewayOrderId: string) {
+    this.paymentStatus = PaymentStatus.success;
+    this.paymentGatewayOrderId = paymentGatewayOrderId;
+    this.done = false;
+    this.published = true;
+    this.publishedAt = dayjs.tz().toDate();
   }
 }

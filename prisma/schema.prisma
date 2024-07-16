@@ -14,7 +14,7 @@ enum Role {
   manager
 }
 
-enum OrderStatus {
+enum PaymentStatus {
   pending
   processing
   success
@@ -132,23 +132,7 @@ model Category {
 }
 
 model Order {
-  id                Int                                  @id @default(autoincrement())
-  createdAt         DateTime                             @default(now())
-  updatedAt         DateTime                             @updatedAt
-  lat               Float
-  long              Float
-  coordinates       Unsupported("geometry(Point, 4326)")
-  done              Boolean                              @default(false)
-  status            OrderStatus                          @default(pending)
-  price             Int
-  agreedPrice       Int?
-  description       String?
-  externalId        String                               @unique @default(uuid()) @db.Uuid()
-  categoryId        Int?
-  customerId        Int?
-  serviceProviderId Int?
-  paymentGatewayOrderId  String?
-  category          Category?                            @relation(fields: [categoryId], references: [id], onDelete: SetNull, onUpdate: Cascade)
-  customer          Customer?                            @relation(fields: [customerId], references: [id], onDelete: SetNull, onUpdate: Cascade)
-  serviceProvider   Admin?                               @relation(fields: [serviceProviderId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  published             Boolean                              @default(false)
+  publishedAt           DateTime?                             
+  paymentStatus         PaymentStatus                        @default(pending)
 }

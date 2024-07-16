@@ -8,6 +8,11 @@ import { generateFolders } from './infra/persistence/asset/generate-folders';
 import { useContainer } from 'class-validator';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { version } from '../package.json';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import dayjs from 'dayjs';
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 async function bootstrap() {
   generateFolders();

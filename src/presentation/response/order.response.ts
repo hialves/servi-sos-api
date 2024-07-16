@@ -4,7 +4,7 @@ import { OrderFields } from '../../domain/entities/order';
 import { CustomerNoUserResponse } from './customer.response';
 import { CategoryNoSubResponse } from './category.response';
 import { AdminNoUserResponse } from './admin.response';
-import { OrderStatus } from '@prisma/client';
+import { PaymentStatus } from '@prisma/client';
 
 export class OrderResponse
   implements
@@ -23,6 +23,10 @@ export class OrderResponse
   @ApiProperty()
   done: boolean;
   @ApiProperty()
+  published: boolean;
+  @ApiProperty()
+  publishedAt: Date;
+  @ApiProperty()
   price: number;
   @ApiPropertyOptional()
   agreedPrice: number | null;
@@ -31,7 +35,7 @@ export class OrderResponse
   @ApiPropertyOptional()
   description: string | null;
   @ApiProperty()
-  status: OrderStatus;
+  paymentStatus: PaymentStatus;
 }
 
 export class OrderFullResponse extends OrderResponse {
