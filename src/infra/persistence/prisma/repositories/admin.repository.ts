@@ -2,10 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { ExternalID, ID } from '../../../../domain/entities';
 import { Admin } from '../../../../domain/entities/admin';
-import { Prisma, Admin as PrismaAdmin, PrismaClient } from '@prisma/client';
+import { Admin as PrismaAdmin } from '@prisma/client';
 import { AdminRepository } from '../../../../application/repositories/admin-repository.interface';
 import { CreateAdminData } from '../../../../domain/valueobjects/create-admin-data';
-import { DefaultArgs } from '@prisma/client/runtime/library';
 import { Transaction } from '../prisma.interface';
 
 function toDomain(result: PrismaAdmin | null): Admin | null {
@@ -22,10 +21,10 @@ export class AdminPrismaRepository implements AdminRepository {
   }
 
   async create(input: CreateAdminData, _tx?: Transaction) {
-    const { password, role, ...adminData } = input.data;
+    const { password, role, googleId, ...adminData } = input.data;
     const fn = async (tx: Transaction) => {
       const txResult = await tx.admin.create({
-        data: { ...adminData, user: { create: { email: adminData.email, password, role } } },
+        data: { ...adminData, user: { create: { email: adminData.email, password, role, googleId } } },
       });
       return new Admin(txResult);
     };
@@ -68,6 +67,13 @@ export class AdminPrismaRepository implements AdminRepository {
   async getByUserId(userId: ID): Promise<Admin | null> {
     const result = await this.repository.findUnique({
       where: { userId },
+    });
+    return toDomain(result);
+  }
+
+  async findByGoogleId(googleId: string): Promise<Admin | null> {
+    const result = await this.repository.findFirst({
+      where: { user: { googleId } },
     });
     return toDomain(result);
   }

@@ -10,4 +10,5 @@ export abstract class AdminRepository {
   abstract findByEmail(email: string): Promise<Admin | null>;
   abstract update(input: Admin): Promise<Admin>;
   abstract getByUserId(userId: ID): Promise<Admin | null>;
+  abstract findByGoogleId(googleId: string): Promise<Admin | null>;
 }

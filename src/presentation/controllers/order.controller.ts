@@ -61,7 +61,7 @@ export class OrderController {
   }
 
   @Roles(...AllRoles)
-  @ApiOkResponse({ type: OrderFullResponse })
+  @ApiOkResponse({ type: OrderFullResponse, isArray: true })
   @Get('my-orders')
   async myOrders(@Session() session: UserSession) {
     const customer = await this.customerRepository.getByUserId(session.userId);
@@ -70,15 +70,17 @@ export class OrderController {
   }
 
   @Roles(...AllRoles)
-  @ApiOkResponse({ type: OrderFullResponse })
+  @ApiOkResponse({ type: OrderFullResponse, isArray: true })
   @Get('active')
   async activeOrders(
     @Query('lat', ParseFloatPipe) lat: number,
     @Query('long', ParseFloatPipe) long: number,
     @Query('meters', ParseIntPipe) meters: number,
-    @Query('categoryId', ParseIntPipe) categoryId?: number,
+    @Query('categoryId') categoryId?: string,
   ) {
-    const result = await this.orderListRepository.activeOrders(new Location({ lat, long }), meters, { categoryId });
+    const result = await this.orderListRepository.activeOrders(new Location({ lat, long }), meters, {
+      categoryId: categoryId ? +categoryId : undefined,
+    });
     return result;
   }
 

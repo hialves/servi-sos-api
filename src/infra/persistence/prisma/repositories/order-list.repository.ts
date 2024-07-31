@@ -36,6 +36,7 @@ export class OrderListPrismaRepository implements OrderListRepository {
 
   async activeOrders(referencePoint: Location, meters: number, filters: { categoryId?: ID }) {
     const parsed = `'POINT(${referencePoint.long} ${referencePoint.lat})'`;
+    const categoryQuery = filters.categoryId ? 'AND o."categoryId" = $1' : '';
     const result = await this.prisma.$queryRawUnsafe(
       `
       SELECT 
@@ -46,12 +47,13 @@ export class OrderListPrismaRepository implements OrderListRepository {
       FROM "Order" o
       LEFT JOIN "Customer" c ON c.id = o."customerId"
       LEFT JOIN "Admin" a ON a.id = o."serviceProviderId"
-      LEFT JOIN "Category" category ON category.id = o."categoryId" AND o."categoryId" = $1
+      LEFT JOIN "Category" category ON category.id = o."categoryId" ${categoryQuery}
       WHERE ST_DWithin(o.coordinates, ST_GeomFromText(${parsed},4326)::geography, ${meters})
         AND o.done = false
     `,
-      ...[filters.categoryId],
+      ...(filters.categoryId ? [filters.categoryId] : []),
     );
+    console.log(result);
     return result as OrderFullPayload[];
   }
 }

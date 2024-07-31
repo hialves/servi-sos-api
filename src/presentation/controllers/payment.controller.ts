@@ -47,7 +47,6 @@ export class PaymentController {
     @Param('paymentIntentId') paymentIntentId: string,
     @Body() body: PaymentSheetDto,
   ) {
-    console.log({ body });
     return this.updateOrderId.execute({
       userId: session.userId,
       externalOrderId: body.externalOrderId,
@@ -65,7 +64,6 @@ export class PaymentController {
   @IsPublic()
   @Post('webhook')
   async webhook(@Body() raw: Buffer, @Headers('stripe-signature') stripeSignature: string): Promise<void> {
-    // console.log({ body, stripeSignature });
     this.handleWebhook.execute(raw, stripeSignature);
   }
 }
