@@ -2,10 +2,17 @@ import { Admin, User } from '@prisma/client';
 import { AdminWithUserResponse } from '../response/admin.response';
 
 export const AdminMapper = {
-  getToResponse: (input: Admin & { user: User | null }): AdminWithUserResponse => {
-    const { userId: __, user, ...rest } = input;
+  toHTTP: (admin: Admin & { user: User | null }): AdminWithUserResponse => {
+    const { user } = admin;
+
     return {
-      ...rest,
+      id: admin.id,
+      externalId: admin.externalId,
+      createdAt: admin.createdAt,
+      updatedAt: admin.updatedAt,
+      name: admin.name,
+      email: admin.email,
+      assetId: admin.assetId,
       user: user && {
         id: user.id,
         lastLogin: user.lastLogin,

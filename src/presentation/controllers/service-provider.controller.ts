@@ -36,7 +36,7 @@ export class ServiceProviderController {
   async findOne(@Param('id') externalId: ExternalID) {
     const result = await this.repository.findUnique({ where: { externalId }, include: { user: true } });
     if (!result) throw new NotFoundException();
-    return AdminMapper.getToResponse(result);
+    return AdminMapper.toHTTP(result);
   }
 
   @IsPublic()

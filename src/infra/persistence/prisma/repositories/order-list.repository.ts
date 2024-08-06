@@ -50,10 +50,10 @@ export class OrderListPrismaRepository implements OrderListRepository {
       LEFT JOIN "Category" category ON category.id = o."categoryId" ${categoryQuery}
       WHERE ST_DWithin(o.coordinates, ST_GeomFromText(${parsed},4326)::geography, ${meters})
         AND o.done = false
+        AND o.published = true
     `,
       ...(filters.categoryId ? [filters.categoryId] : []),
     );
-    console.log(result);
     return result as OrderFullPayload[];
   }
 }

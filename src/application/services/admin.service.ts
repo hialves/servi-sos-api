@@ -27,14 +27,13 @@ export class AdminService {
   }
 
   async update(externalId: ExternalID, updateData: UpdateAdminData): Promise<Admin | ApplicationError> {
-    const existsAdmin = await this.repository.findByExternalId(externalId);
-    if (!existsAdmin)
-      return new ApplicationError(responseMessages.notFound(responseMessages.admin), HttpStatus.NOT_FOUND);
+    const admin = await this.repository.findByExternalId(externalId);
+    if (!admin) return new ApplicationError(responseMessages.notFound(responseMessages.admin), HttpStatus.NOT_FOUND);
 
-    const admin = new Admin({
-      ...existsAdmin,
-      ...updateData.data,
-    });
+    if (updateData.data.name !== undefined) admin.name = updateData.data.name;
+    if (updateData.data.email !== undefined) admin.email = updateData.data.email;
+    if (updateData.data.assetId !== undefined) admin.assetId = updateData.data.assetId;
+    if (updateData.data.userId !== undefined) admin.userId = updateData.data.userId;
 
     return this.repository.update(admin);
   }

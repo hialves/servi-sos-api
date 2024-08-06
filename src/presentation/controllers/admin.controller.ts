@@ -12,6 +12,7 @@ import { AdminService } from '../../application/services/admin.service';
 import { IsPublic } from '../decorators/public.decorator';
 import { CreateAdminData } from '../../domain/valueobjects/create-admin-data';
 import { AdminMapper } from '../mappers/admin.mapper';
+import { isAppError } from '../helpers/application-error.helper';
 
 @ApiTags('Admin')
 @Controller('admins')
@@ -38,7 +39,7 @@ export class AdminController {
   @Get()
   async findAll(@Query() filters?: PaginatedDto) {
     const result = await this.repository.findMany({ ...filters, include: { user: true } });
-    return result.map(AdminMapper.getToResponse);
+    return result.map(AdminMapper.toHTTP);
   }
 
   @Roles(Role.super_admin)
@@ -46,14 +47,15 @@ export class AdminController {
   async findOne(@Param('id') externalId: ExternalID) {
     const result = await this.repository.findUnique({ where: { externalId }, include: { user: true } });
     if (!result) throw new NotFoundException();
-    return AdminMapper.getToResponse(result);
+    return AdminMapper.toHTTP(result);
   }
 
   @Roles(Role.super_admin, Role.admin, Role.manager)
   @Patch(':id')
-  update(@Param('id') externalId: ExternalID, @Body() dto: UpdateAdminDto) {
-    const data = new UpdateAdminData(dto);
-    return this.service.update(externalId, data);
+  async update(@Param('id') externalId: ExternalID, @Body() dto: UpdateAdminDto) {
+    const result = await this.service.update(externalId, new UpdateAdminData(dto));
+    if (isAppError(result)) return result;
+    return result;
   }
 
   @Roles(Role.super_admin)

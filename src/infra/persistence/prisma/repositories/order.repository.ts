@@ -6,13 +6,10 @@ import { Order as PrismaOrder } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
 import { ExternalID, ID } from '../../../../domain/entities';
 import dayjs from 'dayjs';
-
-function toDomain(result: PrismaOrder): Order {
-  return new Order(result);
-}
+import { OrderMapper } from '../mappers/order.mapper';
 
 function maybeToDomain(result: PrismaOrder | null): Order | null {
-  if (result) return toDomain(result);
+  if (result) return OrderMapper.toDomain(result);
   return null;
 }
 
@@ -58,10 +55,10 @@ export class OrderPrismaRepository implements OrderRepository {
     try {
       const result = await this.repository.update({
         where: { id: input.id },
-        data: input.unwrap(),
+        data: OrderMapper.toPrisma(input),
         include: { category: true, customer: true, serviceProvider: true },
       });
-      return toDomain(result);
+      return OrderMapper.toDomain(result);
     } catch (e) {
       console.log('update error', e);
       throw e;

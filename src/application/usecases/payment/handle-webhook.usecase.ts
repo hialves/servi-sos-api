@@ -48,8 +48,7 @@ export class HandleWebhookUsecase {
       case 'payment_intent.payment_failed':
         this.orderRepository.findById(+event.data.object.metadata.orderId).then((order) => {
           if (order) {
-            order.paymentStatus = PaymentStatus.payment_failed;
-            order.paymentGatewayOrderId = event.data.object.id;
+            order.updatePaymentStatus(PaymentStatus.payment_failed, event.data.object.id);
             this.orderRepository.update(order).catch((e) => e);
             this.notify(order, {
               message: `Houve um problema com o pagamento do pedido #${+event.data.object.metadata.orderId}`,
@@ -62,8 +61,7 @@ export class HandleWebhookUsecase {
       case 'payment_intent.processing':
         this.orderRepository.findById(+event.data.object.metadata.orderId).then((order) => {
           if (order) {
-            order.paymentStatus = PaymentStatus.processing;
-            order.paymentGatewayOrderId = event.data.object.id;
+            order.updatePaymentStatus(PaymentStatus.processing, event.data.object.id);
             this.orderRepository.update(order).catch((e) => e);
           }
         });

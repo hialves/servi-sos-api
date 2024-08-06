@@ -5,7 +5,6 @@ import { UserSession } from '../../infra/interfaces/user-session.interface';
 import { Roles } from '../decorators/roles.decorator';
 import { Role } from '@prisma/client';
 import { Response } from 'express';
-import { ApplicationError } from '../../application/errors/application-error';
 import { CreatePaymentUsecase } from '../../application/usecases/payment/create-payment.usecase';
 import { ChargePaymentMethodDto } from '../dto/payment/charge-payment-method.dto';
 import { ChargePaymentMethodUsecase } from '../../application/usecases/payment/charge-payment-method.usecase';
@@ -13,6 +12,7 @@ import { IsPublic } from '../decorators/public.decorator';
 import { HandleWebhookUsecase } from '../../application/usecases/payment/handle-webhook.usecase';
 import { PaymentSheetDto } from '../dto/payment/payment-sheet.dto';
 import { UpdateOrderIdUsecase } from '../../application/usecases/payment/update-order-id.usecase';
+import { isAppError } from '../helpers/application-error.helper';
 
 @ApiTags('Payment')
 @Controller('payment')
@@ -29,7 +29,7 @@ export class PaymentController {
   @Post('checkout-session')
   async createCheckoutSession(@Session() session: UserSession, @Res({ passthrough: true }) res: Response) {
     const redirectUrl = await this.checkoutOrder.execute(session.userId);
-    if (redirectUrl instanceof ApplicationError) return redirectUrl;
+    if (isAppError(redirectUrl)) return redirectUrl;
 
     res.redirect(redirectUrl);
   }
@@ -58,7 +58,7 @@ export class PaymentController {
   @Post('charge-payment-method')
   async _chargePaymentMethod(@Body() dto: ChargePaymentMethodDto, @Session() session: UserSession) {
     const result = await this.chargePaymentMethod.execute(dto, session.userId);
-    if (result instanceof ApplicationError) return result;
+    if (isAppError(result)) return result;
   }
 
   @IsPublic()

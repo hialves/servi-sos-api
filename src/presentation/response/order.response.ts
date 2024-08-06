@@ -8,7 +8,10 @@ import { PaymentStatus } from '@prisma/client';
 
 export class OrderResponse
   implements
-    Omit<OrderFields, 'id' | 'categoryId' | 'userId' | 'customerId' | 'serviceProviderId' | 'paymentGatewayOrderId'>
+    Omit<
+      OrderFields,
+      'id' | 'categoryId' | 'userId' | 'customerId' | 'serviceProviderId' | 'paymentGatewayOrderId' | 'location'
+    >
 {
   @ApiProperty()
   id: ID;

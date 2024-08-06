@@ -10,8 +10,7 @@ export interface OrderFields {
   categoryId: ID | null;
   customerId: ID | null;
   serviceProviderId: number | null;
-  lat: number;
-  long: number;
+  location: Location;
   done: boolean;
   published: boolean;
   publishedAt: Date | null;
@@ -24,73 +23,99 @@ export interface OrderFields {
 }
 
 export class Order {
-  id: ID;
-  createdAt: Date;
-  updatedAt: Date;
-  categoryId: ID | null;
-  customerId: ID | null;
-  serviceProviderId: ID | null;
-  location: Location;
-  done: boolean;
-  published: boolean;
-  publishedAt: Date | null;
-  price: number;
-  agreedPrice: number | null;
-  externalId: ExternalID;
-  description: string | null;
-  paymentGatewayOrderId: string | null;
-  paymentStatus: PaymentStatus;
+  private props: OrderFields;
 
   constructor(input: OrderFields) {
-    this.id = input.id;
-    this.createdAt = input.createdAt;
-    this.updatedAt = input.updatedAt;
-    this.categoryId = input.categoryId;
-    this.customerId = input.customerId;
-    this.serviceProviderId = input.serviceProviderId;
-    this.location = new Location({ lat: input.lat, long: input.long });
-    this.done = input.done;
-    this.price = input.price;
-    this.agreedPrice = input.agreedPrice;
-    this.externalId = input.externalId;
-    this.description = input.description;
-    this.paymentGatewayOrderId = input.paymentGatewayOrderId;
-    this.paymentStatus = input.paymentStatus;
-    this.published = input.published;
-    this.publishedAt = input.publishedAt;
+    this.props = input;
+  }
+
+  get id() {
+    return this.props.id;
+  }
+  get createdAt() {
+    return this.props.createdAt;
+  }
+  get updatedAt() {
+    return this.props.updatedAt;
+  }
+  get categoryId() {
+    return this.props.categoryId;
+  }
+  get customerId() {
+    return this.props.customerId;
+  }
+  get serviceProviderId() {
+    return this.props.serviceProviderId;
+  }
+  get location() {
+    return this.props.location;
+  }
+  set location(value: Location) {
+    this.props.location = value;
+  }
+  get done() {
+    return this.props.done;
+  }
+  get price() {
+    return this.props.price;
+  }
+  get agreedPrice() {
+    return this.props.agreedPrice;
+  }
+  get externalId() {
+    return this.props.externalId;
+  }
+  get description() {
+    return this.props.description;
+  }
+  get paymentGatewayOrderId() {
+    return this.props.paymentGatewayOrderId;
+  }
+  get paymentStatus() {
+    return this.props.paymentStatus;
+  }
+  get published() {
+    return this.props.published;
+  }
+  get publishedAt() {
+    return this.props.publishedAt;
   }
 
   changeCategory(categoryId: ID) {
-    this.categoryId = categoryId;
+    this.props.categoryId = categoryId;
   }
 
   setAgreedPrice(agreedPrice: number) {
-    this.agreedPrice = agreedPrice;
+    this.props.agreedPrice = agreedPrice;
   }
 
   setCustomerLocation(coords: { lat: number; long: number }) {
-    this.location = new Location(coords);
+    this.props.location = new Location(coords);
   }
 
   assignServiceProvider(serviceProviderId: ID) {
-    this.serviceProviderId = serviceProviderId;
+    this.props.serviceProviderId = serviceProviderId;
   }
 
   unassignServiceProvider() {
-    this.serviceProviderId = null;
-    this.agreedPrice = null;
+    this.props.serviceProviderId = null;
+    this.props.agreedPrice = null;
   }
 
   unwrap() {
-    const { location, ...rest } = this;
+    const { location, ...rest } = this.props;
     return { ...rest, ...location };
   }
 
   publishOnPaymentSuccess(paymentGatewayOrderId: string) {
-    this.paymentStatus = PaymentStatus.success;
-    this.paymentGatewayOrderId = paymentGatewayOrderId;
-    this.done = false;
-    this.published = true;
-    this.publishedAt = dayjs.tz().toDate();
+    this.updatePaymentStatus(PaymentStatus.success, paymentGatewayOrderId);
+    this.props.done = false;
+    this.props.published = true;
+    this.props.publishedAt = dayjs.tz().toDate();
+  }
+
+  updatePaymentStatus(paymentStatus: PaymentStatus, paymentGatewayOrderId: string) {
+    this.props.paymentStatus = paymentStatus;
+    this.props.paymentGatewayOrderId = paymentGatewayOrderId;
   }
 }
