@@ -22,18 +22,19 @@ enum PaymentStatus {
 }
 
 model Admin {
-  id         Int                    @id @default(autoincrement())
-  createdAt  DateTime               @default(now())
-  updatedAt  DateTime               @updatedAt
-  name       String                 @db.VarChar
-  email      String                 @db.VarChar
-  assetId    Int?                   @unique
-  userId     Int?                   @unique
-  externalId String                 @unique @default(uuid()) @db.Uuid()
-  asset      Asset?                 @relation(fields: [assetId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  user       User?                  @relation(fields: [userId], references: [id])
-  orders     Order[]
-  config     ServiceProviderConfig?
+  id               Int                    @id @default(autoincrement())
+  createdAt        DateTime               @default(now())
+  updatedAt        DateTime               @updatedAt
+  name             String                 @db.VarChar
+  email            String                 @db.VarChar
+  assetId          Int?                   @unique
+  userId           Int?                   @unique
+  externalId       String                 @unique @default(uuid()) @db.Uuid()
+  asset            Asset?                 @relation(fields: [assetId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user             User?                  @relation(fields: [userId], references: [id])
+  orders           Order[]
+  config           ServiceProviderConfig?
+  interestedOrders OrderInterested[]
 }
 
 model ServiceProviderConfig {
@@ -140,7 +141,7 @@ model Order {
   coordinates           Unsupported("geometry(Point, 4326)")
   done                  Boolean                              @default(false)
   published             Boolean                              @default(false)
-  publishedAt           DateTime?                             
+  publishedAt           DateTime?
   paymentStatus         PaymentStatus                        @default(pending)
   price                 Int
   agreedPrice           Int?
@@ -153,4 +154,18 @@ model Order {
   category              Category?                            @relation(fields: [categoryId], references: [id], onDelete: SetNull, onUpdate: Cascade)
   customer              Customer?                            @relation(fields: [customerId], references: [id], onDelete: SetNull, onUpdate: Cascade)
   serviceProvider       Admin?                               @relation(fields: [serviceProviderId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  interesteds           OrderInterested[]
+}
+
+model OrderInterested {
+  order             Order    @relation(fields: [orderId], references: [id])
+  orderId           Int
+  serviceProvider   Admin    @relation(fields: [serviceProviderId], references: [id])
+  serviceProviderId Int
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  givenPrice        Int
+  history           Json     @default("[]")
+
+  @@id([orderId, serviceProviderId])
 }
