@@ -29,6 +29,7 @@ import { TestController } from './presentation/controllers/test.controller';
 import { PaymentModule } from './infra/modules/payment.module';
 import { RawBodyMiddleware } from './presentation/middleware/raw-body.middleware';
 import { JsonBodyMiddleware } from './presentation/middleware/json-body.middleware';
+import { OrderInterestedModule } from './infra/modules/order-interested.module';
 
 @Module({
   imports: [
@@ -54,6 +55,7 @@ import { JsonBodyMiddleware } from './presentation/middleware/json-body.middlewa
     DomainModule,
     ServiceProviderModule,
     PaymentModule,
+    OrderInterestedModule,
   ],
   controllers: [AppController, TestController],
   providers: [
