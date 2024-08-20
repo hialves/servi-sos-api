@@ -3,6 +3,11 @@ import { ID } from '.';
 import { Replace } from '../../helper/replace';
 
 type History = Array<{ price: number; date: string }>;
+export enum AcceptanceStatus {
+  ACCEPTED = 'ACCEPTED',
+  REFUSED = 'REFUSED',
+  PENDING = 'PENDING',
+}
 
 export interface OrderInterestedFields {
   createdAt: Date;
@@ -11,17 +16,24 @@ export interface OrderInterestedFields {
   history: History;
   serviceProviderId: ID;
   orderId: ID;
+  acceptanceStatus: AcceptanceStatus;
 }
 
 export class OrderInterested {
   private props: OrderInterestedFields;
 
-  constructor(input: Replace<OrderInterestedFields, { history?: History; createdAt?: Date; updatedAt?: Date }>) {
+  constructor(
+    input: Replace<
+      OrderInterestedFields,
+      { history?: History; createdAt?: Date; updatedAt?: Date; acceptanceStatus?: AcceptanceStatus }
+    >,
+  ) {
     this.props = {
       ...input,
       createdAt: input.createdAt ?? dayjs.tz(undefined, 'utc').toDate(),
       updatedAt: input.updatedAt ?? dayjs.tz(undefined, 'utc').toDate(),
       history: input.history ?? [this.createHistory(input.givenPrice)],
+      acceptanceStatus: input.acceptanceStatus ?? AcceptanceStatus.PENDING,
     };
   }
 
@@ -42,6 +54,12 @@ export class OrderInterested {
   }
   get serviceProviderId() {
     return this.props.serviceProviderId;
+  }
+  get acceptanceStatus() {
+    return this.props.acceptanceStatus;
+  }
+  private set acceptanceStatus(value: AcceptanceStatus) {
+    this.acceptanceStatus = value;
   }
 
   private createHistory(price: number) {

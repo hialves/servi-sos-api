@@ -157,6 +157,12 @@ model Order {
   interesteds           OrderInterested[]
 }
 
+enum AcceptanceStatus {
+  ACCEPTED
+  REFUSED
+  PENDING
+}
+
 model OrderInterested {
   order             Order    @relation(fields: [orderId], references: [id])
   orderId           Int
@@ -166,6 +172,7 @@ model OrderInterested {
   updatedAt         DateTime @updatedAt
   givenPrice        Int
   history           Json     @default("[]")
+  acceptanceStatus  AcceptanceStatus @default(PENDING)
 
   @@id([orderId, serviceProviderId])
 }

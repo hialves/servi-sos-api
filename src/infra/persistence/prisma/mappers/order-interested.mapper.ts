@@ -1,5 +1,5 @@
 import { Prisma, OrderInterested as RawOrderInterested } from '@prisma/client';
-import { OrderInterested } from '../../../../domain/entities/order-interested';
+import { AcceptanceStatus, OrderInterested } from '../../../../domain/entities/order-interested';
 import { Replace } from '../../../../helper/replace';
 
 type ParsedRawOrderInterested = Replace<RawOrderInterested, { history: Prisma.JsonArray }>;
@@ -13,6 +13,7 @@ export class OrderInterestedMapper {
       history: entity.history.map((item) => ({ date: item.date, price: item.price })),
       orderId: entity.orderId,
       serviceProviderId: entity.serviceProviderId,
+      acceptanceStatus: entity.acceptanceStatus,
     };
   }
 
@@ -27,6 +28,7 @@ export class OrderInterestedMapper {
       })),
       orderId: raw.orderId,
       serviceProviderId: raw.serviceProviderId,
+      acceptanceStatus: raw.acceptanceStatus as AcceptanceStatus,
     });
   }
 }

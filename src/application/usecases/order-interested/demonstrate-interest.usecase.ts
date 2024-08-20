@@ -18,16 +18,17 @@ export class DemonstrateInterestUsecase {
     const serviceProvider = await this.adminRepository.getByUserId(userId);
     if (!serviceProvider) return new ApplicationError(responseMessages.user.notAdmin);
 
+    const newPrice = dto.givenPrice * 100;
     const exists = await this.repository.findByUnique({ orderId: dto.orderId, serviceProviderId: serviceProvider.id });
     if (exists) {
-      const isNewPrice = exists.isNewPrice(dto.givenPrice);
-      exists.changePrice(dto.givenPrice);
+      const isNewPrice = exists.isNewPrice(newPrice);
+      exists.changePrice(newPrice);
       isNewPrice && (await this.repository.save(exists));
       return exists;
     }
 
     const entity = new OrderInterested({
-      givenPrice: dto.givenPrice,
+      givenPrice: newPrice,
       orderId: dto.orderId,
       serviceProviderId: serviceProvider.id,
     });

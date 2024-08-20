@@ -43,4 +43,12 @@ export class OrderInterestedPrismaRepository {
       include: { serviceProvider: true },
     });
   }
+
+  getSentInterestedOrders(serviceProviderId: ID) {
+    return this.repository.findMany({
+      where: { serviceProviderId },
+      include: { order: true },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
 }

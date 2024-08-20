@@ -8,6 +8,7 @@ import { DemonstrateInterestDto } from '../../application/order-interested/demon
 import { DemonstrateInterestUsecase } from '../../application/usecases/order-interested/demonstrate-interest.usecase';
 import { UserSession } from '../../infra/interfaces/user-session.interface';
 import { Role } from '@prisma/client';
+import { GetSentInterestedOrdersUsecase } from '../../application/usecases/order-interested/get-sent-interested-orders.usecase';
 
 @ApiTags('Order interested')
 @Controller('order-interesteds')
@@ -16,6 +17,7 @@ export class OrderInterestedController {
   constructor(
     private orderInterestedRepository: OrderInterestedPrismaRepository,
     private demonstrateInterest: DemonstrateInterestUsecase,
+    private getSentInterestedOrders: GetSentInterestedOrdersUsecase,
   ) {}
 
   @ApiOperation({ summary: 'Demonstra interesse no pedido' })
@@ -23,6 +25,13 @@ export class OrderInterestedController {
   @Post()
   addInterest(@Body() dto: DemonstrateInterestDto, @Session() session: UserSession) {
     return this.demonstrateInterest.execute(dto, session.userId);
+  }
+
+  @ApiOperation({ summary: 'Obtém os provedores de serviços interessados no pedido' })
+  @Roles(...AllRoles)
+  @Get('/sent')
+  getServiceProviderSentInterestedOrders(@Session() session: UserSession) {
+    return this.getSentInterestedOrders.execute(session.userId);
   }
 
   @ApiOperation({ summary: 'Obtém os provedores de serviços interessados no pedido' })

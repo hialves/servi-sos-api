@@ -65,8 +65,11 @@ export class OrderController {
   @Get('my-orders')
   async myOrders(@Session() session: UserSession) {
     const customer = await this.customerRepository.getByUserId(session.userId);
-    const result = await this.orderListRepository.customerOrders(customer!.externalId);
-    return result;
+    if (customer) {
+      const result = await this.orderListRepository.customerOrders(customer.externalId);
+      return result;
+    }
+    return [];
   }
 
   @Roles(...AllRoles)
