@@ -81,6 +81,10 @@ export class Order {
     return this.props.publishedAt;
   }
 
+  isFinished() {
+    return this.done;
+  }
+
   changeCategory(categoryId: ID) {
     this.props.categoryId = categoryId;
   }
@@ -91,10 +95,6 @@ export class Order {
 
   setCustomerLocation(coords: { lat: number; long: number }) {
     this.props.location = new Location(coords);
-  }
-
-  assignServiceProvider(serviceProviderId: ID) {
-    this.props.serviceProviderId = serviceProviderId;
   }
 
   unassignServiceProvider() {
@@ -117,5 +117,10 @@ export class Order {
   updatePaymentStatus(paymentStatus: PaymentStatus, paymentGatewayOrderId: string) {
     this.props.paymentStatus = paymentStatus;
     this.props.paymentGatewayOrderId = paymentGatewayOrderId;
+  }
+
+  acceptServiceProviderQuote(input: { serviceProviderId: ID; givenPrice: number }) {
+    this.props.serviceProviderId = input.serviceProviderId;
+    this.props.agreedPrice = input.givenPrice;
   }
 }

@@ -17,6 +17,7 @@ import { ServiceProviderCategoryRepository } from '../../application/repositorie
 import { ServiceProviderConfigRepository } from '../../application/repositories/service-provider-config.interface';
 import { ServiceProviderConfigPrismaRepository } from '../persistence/prisma/repositories/service-provider-config.repository';
 import { OrderInterestedPrismaRepository } from '../persistence/prisma/repositories/order-interested.repository';
+import { OrderNegotiationPrismaRepository } from '../persistence/prisma/repositories/order-negotiation.repository';
 
 @Global()
 @Module({
@@ -58,6 +59,10 @@ import { OrderInterestedPrismaRepository } from '../persistence/prisma/repositor
       provide: OrderInterestedPrismaRepository,
       useClass: OrderInterestedPrismaRepository,
     },
+    {
+      provide: OrderNegotiationPrismaRepository,
+      useClass: OrderNegotiationPrismaRepository,
+    },
   ],
   exports: [
     UserRepository,
@@ -69,6 +74,7 @@ import { OrderInterestedPrismaRepository } from '../persistence/prisma/repositor
     ServiceProviderCategoryRepository,
     ServiceProviderConfigRepository,
     OrderInterestedPrismaRepository,
+    OrderNegotiationPrismaRepository,
   ],
 })
 export class RepositoryModule {}

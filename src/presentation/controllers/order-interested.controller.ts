@@ -9,6 +9,8 @@ import { DemonstrateInterestUsecase } from '../../application/usecases/order-int
 import { UserSession } from '../../infra/interfaces/user-session.interface';
 import { Role } from '@prisma/client';
 import { GetSentInterestedOrdersUsecase } from '../../application/usecases/order-interested/get-sent-interested-orders.usecase';
+import { AnswerQuoteInterestDto } from '../../application/order-interested/answer-quote-interest.dto';
+import { AnswerQuoteInterestUsecase } from '../../application/usecases/order-interested/answer-quote-interest.usecase';
 
 @ApiTags('Order interested')
 @Controller('order-interesteds')
@@ -18,6 +20,7 @@ export class OrderInterestedController {
     private orderInterestedRepository: OrderInterestedPrismaRepository,
     private demonstrateInterest: DemonstrateInterestUsecase,
     private getSentInterestedOrders: GetSentInterestedOrdersUsecase,
+    private answerQuote: AnswerQuoteInterestUsecase,
   ) {}
 
   @ApiOperation({ summary: 'Demonstra interesse no pedido' })
@@ -25,6 +28,13 @@ export class OrderInterestedController {
   @Post()
   addInterest(@Body() dto: DemonstrateInterestDto, @Session() session: UserSession) {
     return this.demonstrateInterest.execute(dto, session.userId);
+  }
+
+  @ApiOperation({ summary: 'Responde o orçamento do provedor de serviço' })
+  @Roles(Role.customer)
+  @Post('answer-quote')
+  answerServiceProviderQuote(@Body() dto: AnswerQuoteInterestDto, @Session() session: UserSession) {
+    return this.answerQuote.execute(dto, session.userId);
   }
 
   @ApiOperation({ summary: 'Obtém os provedores de serviços interessados no pedido' })

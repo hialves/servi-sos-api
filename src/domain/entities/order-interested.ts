@@ -58,8 +58,9 @@ export class OrderInterested {
   get acceptanceStatus() {
     return this.props.acceptanceStatus;
   }
-  private set acceptanceStatus(value: AcceptanceStatus) {
-    this.acceptanceStatus = value;
+
+  handleAcceptance(value: AcceptanceStatus) {
+    this.props.acceptanceStatus = value;
   }
 
   private createHistory(price: number) {

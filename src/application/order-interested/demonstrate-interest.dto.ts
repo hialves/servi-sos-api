@@ -1,5 +1,5 @@
-import { IsNotEmpty, IsNumber, IsPositive } from 'class-validator';
-import { ID } from '../../domain/entities';
+import { IsNotEmpty, IsNumber, IsPositive, IsString } from 'class-validator';
+import { ExternalID } from '../../domain/entities';
 
 export class DemonstrateInterestDto {
   @IsNotEmpty()
@@ -8,5 +8,6 @@ export class DemonstrateInterestDto {
   givenPrice: number;
 
   @IsNotEmpty()
-  orderId: ID;
+  @IsString()
+  externalOrderId: ExternalID;
 }
