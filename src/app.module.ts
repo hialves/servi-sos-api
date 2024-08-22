@@ -30,6 +30,7 @@ import { PaymentModule } from './infra/modules/payment.module';
 import { RawBodyMiddleware } from './presentation/middleware/raw-body.middleware';
 import { JsonBodyMiddleware } from './presentation/middleware/json-body.middleware';
 import { OrderInterestedModule } from './infra/modules/order-interested.module';
+import { OrderNegotiationModule } from './infra/modules/order-negotiation.module';
 
 @Module({
   imports: [
@@ -56,6 +57,7 @@ import { OrderInterestedModule } from './infra/modules/order-interested.module';
     ServiceProviderModule,
     PaymentModule,
     OrderInterestedModule,
+    OrderNegotiationModule,
   ],
   controllers: [AppController, TestController],
   providers: [

@@ -8,10 +8,6 @@ import { OrderNegotiation } from '../../../../domain/entities/order-negotiation'
 export class OrderNegotiationPrismaRepository {
   constructor(private prisma: PrismaService) {}
 
-  get repository() {
-    return this.prisma.orderInterested;
-  }
-
   async save(input: OrderNegotiation) {
     const raw = OrderNegotiationMapper.toPrisma(input);
     await this.prisma.$transaction([
@@ -42,20 +38,5 @@ export class OrderNegotiationPrismaRepository {
       return OrderNegotiationMapper.toDomain(order, orderInterested);
     }
     return null;
-  }
-
-  getInterestedServiceProviders(orderId: ID) {
-    return this.repository.findMany({
-      where: { orderId },
-      include: { serviceProvider: true },
-    });
-  }
-
-  getSentInterestedOrders(serviceProviderId: ID) {
-    return this.repository.findMany({
-      where: { serviceProviderId },
-      include: { order: true },
-      orderBy: { createdAt: 'desc' },
-    });
   }
 }

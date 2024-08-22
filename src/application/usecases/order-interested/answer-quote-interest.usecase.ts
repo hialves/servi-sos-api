@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ID } from '../../../domain/entities';
 import { ApplicationError } from '../../errors/application-error';
 import { responseMessages } from '../../messages/response.messages';
-import { AnswerQuoteInterestDto } from '../../order-interested/answer-quote-interest.dto';
+import { AnswerQuoteInterestDto } from '../../order-negotiation/answer-quote-interest.dto';
 import { OrderNegotiationPrismaRepository } from '../../../infra/persistence/prisma/repositories/order-negotiation.repository';
 
 @Injectable()
