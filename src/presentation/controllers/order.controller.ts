@@ -50,13 +50,13 @@ export class OrderController {
     return this.createOrderService.execute(dto, session.userId);
   }
 
-  @Roles(...AllRoles)
+  @Roles(Role.super_admin)
   @ApiOkResponse({ type: OrderFullResponse })
   @Get()
   async findAll(@Query() filters: PaginatedDto) {
     return this.repository.findMany({
       ...filters,
-      include: { category: true, customer: true, serviceProvider: true },
+      include: { category: true, customer: true, serviceProvider: true, _count: { select: { interesteds: true } } },
     });
   }
 

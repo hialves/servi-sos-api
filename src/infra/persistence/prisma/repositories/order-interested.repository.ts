@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { OrderInterested } from '../../../../domain/entities/order-interested';
 import { OrderInterestedMapper } from '../mappers/order-interested.mapper';
-import { ID } from '../../../../domain/entities';
+import { ExternalID, ID } from '../../../../domain/entities';
 
 @Injectable()
 export class OrderInterestedPrismaRepository {
@@ -37,9 +37,9 @@ export class OrderInterestedPrismaRepository {
     return null;
   }
 
-  getInterestedServiceProviders(orderId: ID) {
+  getInterestedServiceProviders(externalOrderId: ExternalID) {
     return this.repository.findMany({
-      where: { orderId },
+      where: { order: { externalId: externalOrderId } },
       include: { serviceProvider: true },
     });
   }

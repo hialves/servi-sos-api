@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Injectable, Param, Post, Session } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Roles } from '../decorators/roles.decorator';
-import { ID } from '../../domain/entities';
+import { ExternalID } from '../../domain/entities';
 import { OrderInterestedPrismaRepository } from '../../infra/persistence/prisma/repositories/order-interested.repository';
 import { AllRoles } from '../helpers/roles.helpers';
 import { DemonstrateInterestDto } from '../../application/order-interested/demonstrate-interest.dto';
@@ -36,8 +36,8 @@ export class OrderInterestedController {
 
   @ApiOperation({ summary: 'Obtém os provedores de serviços interessados no pedido' })
   @Roles(...AllRoles)
-  @Get(':orderId')
-  getInterestedServiceProviders(@Param('orderId') orderId: ID) {
-    return this.orderInterestedRepository.getInterestedServiceProviders(orderId);
+  @Get(':externalOrderId')
+  getInterestedServiceProviders(@Param('externalOrderId') externalOrderId: ExternalID) {
+    return this.orderInterestedRepository.getInterestedServiceProviders(externalOrderId);
   }
 }
