@@ -40,7 +40,7 @@ export class OrderInterestedPrismaRepository {
   getInterestedServiceProviders(externalOrderId: ExternalID) {
     return this.repository.findMany({
       where: { order: { externalId: externalOrderId } },
-      include: { serviceProvider: true },
+      include: { serviceProvider: true, order: true },
     });
   }
 

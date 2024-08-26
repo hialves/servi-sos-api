@@ -27,6 +27,7 @@ import { OrderListRepository } from '../../application/repositories/order-list-r
 import { CustomerRepository } from '../../application/repositories/customer-repository.interface';
 import { UpdateOrderDto } from '../dto/order/update-order.dto';
 import { OrderService } from '../../application/services/order.service';
+import { AdminRepository } from '../../application/repositories/admin-repository.interface';
 
 @ApiTags('Order')
 @Controller('orders')
@@ -37,6 +38,7 @@ export class OrderController {
     private orderListRepository: OrderListRepository,
     private customerRepository: CustomerRepository,
     private orderService: OrderService,
+    private adminRepository: AdminRepository,
   ) {}
 
   private get repository() {
@@ -60,13 +62,25 @@ export class OrderController {
     });
   }
 
-  @Roles(...AllRoles)
+  @Roles(Role.customer)
   @ApiOkResponse({ type: OrderFullResponse, isArray: true })
   @Get('my-orders')
   async myOrders(@Session() session: UserSession) {
     const customer = await this.customerRepository.getByUserId(session.userId);
     if (customer) {
-      const result = await this.orderListRepository.customerOrders(customer.externalId);
+      const result = await this.orderListRepository.customerOrders(customer.id);
+      return result;
+    }
+    return [];
+  }
+
+  @Roles(Role.admin)
+  @ApiOkResponse({ type: OrderFullResponse, isArray: true })
+  @Get('/service-provider/my-orders')
+  async serviceProviderOrders(@Session() session: UserSession) {
+    const admin = await this.adminRepository.getByUserId(session.userId);
+    if (admin) {
+      const result = await this.orderListRepository.serviceProviderOrders(admin.externalId);
       return result;
     }
     return [];

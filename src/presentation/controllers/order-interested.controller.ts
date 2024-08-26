@@ -27,15 +27,15 @@ export class OrderInterestedController {
     return this.demonstrateInterest.execute(dto, session.userId);
   }
 
-  @ApiOperation({ summary: 'Obtém os provedores de serviços interessados no pedido' })
+  @ApiOperation({ summary: 'Obtém os orçamentos enviados' })
   @Roles(...AllRoles)
   @Get('/sent')
-  getServiceProviderSentInterestedOrders(@Session() session: UserSession) {
+  getServiceProviderQuotesSent(@Session() session: UserSession) {
     return this.getSentInterestedOrders.execute(session.userId);
   }
 
   @ApiOperation({ summary: 'Obtém os provedores de serviços interessados no pedido' })
-  @Roles(...AllRoles)
+  @Roles(Role.customer)
   @Get(':externalOrderId')
   getInterestedServiceProviders(@Param('externalOrderId') externalOrderId: ExternalID) {
     return this.orderInterestedRepository.getInterestedServiceProviders(externalOrderId);

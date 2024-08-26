@@ -15,9 +15,9 @@ export class OrderListPrismaRepository implements OrderListRepository {
     return this.prisma.order;
   }
 
-  async customerOrders(customerExternalId: string) {
+  async customerOrders(customerId: ID) {
     const result = await this.repository.findMany({
-      where: { customer: { externalId: customerExternalId } },
+      where: { customerId },
       orderBy: { createdAt: 'desc' },
       include: { category: true, customer: true, serviceProvider: true, _count: { select: { interesteds: true } } },
     });

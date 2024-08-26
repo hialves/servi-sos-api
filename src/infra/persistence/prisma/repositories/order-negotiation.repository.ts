@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { ExternalID, ID } from '../../../../domain/entities';
+import { ExternalID } from '../../../../domain/entities';
 import { OrderNegotiationMapper } from '../mappers/order-negotiation.mapper';
 import { OrderNegotiation } from '../../../../domain/entities/order-negotiation';
 
@@ -27,9 +27,15 @@ export class OrderNegotiationPrismaRepository {
     ]);
   }
 
-  async findNegotiation(input: { externalOrderId: ExternalID; userId: ID }): Promise<OrderNegotiation | null> {
+  async findNegotiation(input: {
+    externalOrderId: ExternalID;
+    serviceProviderExternalId: ExternalID;
+  }): Promise<OrderNegotiation | null> {
     const result = await this.prisma.orderInterested.findFirst({
-      where: { order: { externalId: input.externalOrderId }, serviceProvider: { userId: input.userId } },
+      where: {
+        order: { externalId: input.externalOrderId },
+        serviceProvider: { externalId: input.serviceProviderExternalId },
+      },
       include: { order: true },
     });
 

@@ -11,7 +11,7 @@ export type CustomerOrdersPayload = Prisma.OrderGetPayload<{
 }>;
 
 export abstract class OrderListRepository {
-  abstract customerOrders(customerExternalId: ExternalID): Promise<CustomerOrdersPayload[]>;
+  abstract customerOrders(customerId: ID): Promise<CustomerOrdersPayload[]>;
   abstract serviceProviderOrders(serviceProviderExternalId: ExternalID): Promise<OrderFullPayload[]>;
   abstract activeOrders(coords: Location, range: number, filters: { categoryId?: ID }): Promise<OrderFullPayload[]>;
 }

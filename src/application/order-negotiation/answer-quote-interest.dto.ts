@@ -10,4 +10,8 @@ export class AnswerQuoteInterestDto {
   @IsNotEmpty()
   @IsString()
   externalOrderId: ExternalID;
+
+  @IsNotEmpty()
+  @IsString()
+  serviceProviderExternalId: ExternalID;
 }
