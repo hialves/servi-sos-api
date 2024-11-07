@@ -6,6 +6,7 @@ import { PaymentStatus } from '@prisma/client';
 import { CustomerRepository } from '../../repositories/customer-repository.interface';
 import { Order } from '../../../domain/entities/order';
 import { CategoryRepository } from '../../repositories/category-repository.interface';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class HandleWebhookUsecase {
@@ -15,14 +16,12 @@ export class HandleWebhookUsecase {
     private notificationService: NotificationService,
     private customerRepository: CustomerRepository,
     private categoryRepository: CategoryRepository,
+    private config: ConfigService,
   ) {}
 
   async execute(body: any, signature: string) {
-    const event = await this.stripeService.getWebhookData(
-      body,
-      signature,
-      'whsec_17c6c5ea8f767035df4058b795a7c1f64a610f277bb6699857bbd6d9e34dabbc',
-    );
+    const webhookSecret = this.config.getOrThrow('STRIPE_WEBHOOK_SECRET');
+    const event = await this.stripeService.getWebhookData(body, signature, webhookSecret);
 
     if (!event) return;
 
